@@ -1,0 +1,496 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de Papier Ligné PDF Gratuit (Seyed, Quadrillé) | SWIF PDF</title>
+  <meta name="description" content="Créez et imprimez des feuilles de papier ligné, quadrillé (Seyed 5x5mm, lignes, points bullet journal) au format PDF sur-mesure A4/A5. 100% gratuit et local.">
+  <meta name="keywords" content="générateur papier ligné PDF, papier quadrillé imprimer, Seyed scolaire PDF gratuit, feuille bullet journal PDF, cahier à imprimer PDF">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/lined-paper.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Générateur de Feuille & Cahier PDF Gratuit - SWIF PDF">
+  <meta property="og:description" content="Générez des trames de papier personnalisées (lignes, carreaux, grille) prêtes à l'impression.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/lined-paper.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Générateur de Papier Ligné PDF SWIF PDF",
+    "url": "https://swifpdf.com/lined-paper.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Outil de génération vectorielle de trames de papier à imprimer (ligné, quadrillé, points) en local.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' } }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PDF-Lib CDN for multi-page notebook PDF generation -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="notebook" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">Lined Paper</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Home</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pl"><span class="text-base">🇵🇱</span> Polski</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="ar"><span class="text-base">🇸🇦</span> العربية</a>
+          </div>
+        </div>
+
+        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog"><i data-lucide="book-open" class="w-3.5 h-3.5"></i><span>Blog & Articles</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Generate <span class="text-[#22C55E]">PDF</span> Lined Paper & Notebooks
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto" data-i18n="hero_subtitle">
+          Create custom lined paper, grid graph paper, bullet journal dotted pages, or blank notebooks up to 250 pages.
+        </p>
+      </div>
+
+      <!-- Main Interactive Generator Dashboard Section -->
+      <div id="editorSection" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Column: Customization Form Options -->
+        <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+          
+          <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-extrabold text-slate-900">Notebook Customization Options</h2>
+            <p class="text-xs text-slate-500">Customize paper template, page count, date header and colors.</p>
+          </div>
+
+          <!-- 1. Page Template Selector -->
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-700 block" data-i18n="paper_template_label">Page Template:</label>
+            <select id="templateSelect" class="w-full p-3.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-slate-50 focus:ring-2 focus:ring-emerald-500/30 focus:border-[#22C55E]">
+              <option value="lines" data-i18n="tpl_lines">Horizontal Lines</option>
+              <option value="grid" data-i18n="tpl_grid">Grid / Graph Paper (5mm)</option>
+              <option value="dots" data-i18n="tpl_dots">Bullet Journal (Dotted)</option>
+              <option value="blank" data-i18n="tpl_blank">Blank Pages</option>
+            </select>
+          </div>
+
+          <!-- 2. Page Count Slider & Input (1 to 250 pages) -->
+          <div class="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-slate-700" data-i18n="pages_count_label">Number of Pages (1 to 250):</label>
+              <input type="number" id="pageCountInput" min="1" max="250" value="10" class="w-16 p-1.5 rounded-lg border border-slate-300 text-xs font-black text-center text-slate-900">
+            </div>
+            <input type="range" id="pageCountRange" min="1" max="250" value="10" class="w-full accent-[#22C55E] cursor-pointer">
+          </div>
+
+          <!-- 3. Date Header Option & Position -->
+          <div class="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2.5 text-xs font-bold text-slate-800 cursor-pointer">
+                <input type="checkbox" id="enableDateCheckbox" checked class="w-4 h-4 rounded text-[#22C55E] focus:ring-emerald-500">
+                <span data-i18n="date_header_label">Add Date Header</span>
+              </label>
+            </div>
+            
+            <div class="flex items-center justify-between pt-2 border-t border-slate-200/60">
+              <span class="text-[11px] font-semibold text-slate-600" data-i18n="date_pos_label">Date Position:</span>
+              <select id="datePositionSelect" class="p-2 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                <option value="right" data-i18n="pos_right">Top Right</option>
+                <option value="center" data-i18n="pos_center">Top Center</option>
+                <option value="left" data-i18n="pos_left">Top Left</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 4. Page Numbering Checkbox -->
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <label class="flex items-center gap-2.5 text-xs font-bold text-slate-800 cursor-pointer">
+              <input type="checkbox" id="enablePageNumCheckbox" checked class="w-4 h-4 rounded text-[#22C55E] focus:ring-emerald-500">
+              <span data-i18n="page_numbers_label">Add Page Numbers</span>
+            </label>
+          </div>
+
+          <!-- 5. Line/Dot Color Selector & Presets -->
+          <div class="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-slate-700" data-i18n="line_color_label">Line / Dot Color:</label>
+              <input type="color" id="lineColorInput" value="#D1D5DB" class="w-8 h-8 rounded-lg border-0 cursor-pointer p-0 bg-transparent">
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5 pt-1">
+              <button type="button" data-color="#D1D5DB" class="color-dot w-7 h-7 rounded-full bg-[#D1D5DB] ring-4 ring-orange-400 scale-110 shadow-sm transition-all"></button>
+              <button type="button" data-color="#93C5FD" class="color-dot w-7 h-7 rounded-full bg-[#93C5FD] shadow-sm transition-all"></button>
+              <button type="button" data-color="#A7F3D0" class="color-dot w-7 h-7 rounded-full bg-[#A7F3D0] shadow-sm transition-all"></button>
+              <button type="button" data-color="#DDD6FE" class="color-dot w-7 h-7 rounded-full bg-[#DDD6FE] shadow-sm transition-all"></button>
+              <button type="button" data-color="#FECDD3" class="color-dot w-7 h-7 rounded-full bg-[#FECDD3] shadow-sm transition-all"></button>
+              <button type="button" data-color="#374151" class="color-dot w-7 h-7 rounded-full bg-[#374151] shadow-sm transition-all"></button>
+            </div>
+          </div>
+
+          <!-- ==================== ADVANCED SETTINGS ACCORDION ==================== -->
+          <div class="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button id="advancedToggleBtn" type="button" class="w-full p-4 bg-slate-50 hover:bg-slate-100 text-left flex items-center justify-between font-bold text-xs text-slate-800 transition-colors">
+              <span class="flex items-center gap-2">
+                <i data-lucide="sliders" class="w-4 h-4 text-[#22C55E]"></i>
+                <span data-i18n="advanced_title">Advanced Settings & Paper Format</span>
+              </span>
+              <i id="advancedIcon" data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+
+            <div id="advancedContent" class="hidden p-5 space-y-5 bg-white border-t border-slate-100">
+              
+              <!-- Paper Format Selector -->
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-700 block" data-i18n="paper_format_label">Paper Format Size:</label>
+                <select id="paperFormatSelect" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-slate-50">
+                  <option value="a4" data-i18n="fmt_a4">A4 (210 x 297 mm)</option>
+                  <option value="a5" data-i18n="fmt_a5">A5 (148 x 210 mm)</option>
+                  <option value="letter" data-i18n="fmt_letter">US Letter (8.5 x 11 in)</option>
+                  <option value="legal" data-i18n="fmt_legal">US Legal (8.5 x 14 in)</option>
+                </select>
+              </div>
+
+              <!-- Page Orientation Toggle -->
+              <div class="space-y-2">
+                <label class="text-xs font-bold text-slate-700 block" data-i18n="orientation_label">Page Orientation:</label>
+                <div class="grid grid-cols-2 gap-3">
+                  <button type="button" id="oriPortraitBtn" class="py-2.5 px-3 rounded-xl border-2 border-[#22C55E] text-[#22C55E] bg-[#F0FDF4] font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="file" class="w-4 h-4"></i>
+                    <span data-i18n="ori_portrait">Portrait (Vertical)</span>
+                  </button>
+                  <button type="button" id="oriLandscapeBtn" class="py-2.5 px-3 rounded-xl border border-slate-200 text-slate-700 bg-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-slate-50 transition-all">
+                    <i data-lucide="file-output" class="w-4 h-4 rotate-90"></i>
+                    <span data-i18n="ori_landscape">Landscape (Horizontal)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Millimeter Spacing Slider -->
+              <div class="space-y-2 pt-3 border-t border-slate-100">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-bold text-slate-700" data-i18n="spacing_label">Line / Grid Spacing (mm):</label>
+                  <input type="number" id="spacingMmInput" min="2.0" max="30.0" step="0.5" value="8.0" class="w-16 p-1.5 rounded-lg border border-slate-300 text-xs font-black text-center text-slate-900">
+                </div>
+                <input type="range" id="spacingMmRange" min="2.0" max="30.0" step="0.5" value="8.0" class="w-full accent-emerald-600 cursor-pointer">
+              </div>
+
+              <!-- Logo & Watermark Upload -->
+              <div class="space-y-3 pt-3 border-t border-slate-100">
+                <label class="text-xs font-bold text-slate-700 block" data-i18n="logo_label">Upload Custom Logo / Watermark:</label>
+                <input type="file" id="logoFileInput" accept="image/png,image/jpeg" class="hidden">
+                <button type="button" onclick="document.getElementById('logoFileInput').click()" class="w-full py-2.5 px-4 rounded-xl border border-slate-300 hover:border-[#22C55E] text-xs font-bold text-slate-700 bg-slate-50 flex items-center justify-center gap-2">
+                  <i data-lucide="image-plus" class="w-4 h-4 text-slate-500"></i>
+                  <span>Choose Image File (PNG / JPG)</span>
+                </button>
+
+                <div id="logoPreviewBox" class="hidden flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <img id="logoPreviewImg" class="h-10 max-w-[120px] object-contain" />
+                  <button type="button" onclick="removeUploadedLogo()" class="text-xs font-bold text-red-600 hover:text-red-800">Remove</button>
+                </div>
+
+                <!-- Logo Opacity -->
+                <div class="space-y-1">
+                  <div class="flex justify-between text-[11px] font-bold text-slate-600">
+                    <span data-i18n="logo_opacity_label">Logo Opacity:</span>
+                    <span id="opacityLabelText">35%</span>
+                  </div>
+                  <input type="range" id="logoOpacityRange" min="0.1" max="1.0" step="0.05" value="0.35" class="w-full accent-indigo-600 cursor-pointer">
+                </div>
+
+                <!-- Logo Rule & Position -->
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                  <div>
+                    <label class="text-[11px] font-bold text-slate-600 block mb-1" data-i18n="logo_rule_label">Apply Logo To:</label>
+                    <select id="logoRuleSelect" class="w-full p-2 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                      <option value="all" data-i18n="rule_all">All Pages</option>
+                      <option value="first" data-i18n="rule_first">First Page Only</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-[11px] font-bold text-slate-600 block mb-1" data-i18n="logo_pos_label">Logo Position:</label>
+                    <select id="logoPosSelect" class="w-full p-2 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 bg-white">
+                      <option value="center" data-i18n="pos_center_watermark">Center (Filigree)</option>
+                      <option value="bottom-right" data-i18n="pos_bottom_right">Bottom Right</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Main Generation CTA -->
+          <div class="pt-4 border-t border-slate-100">
+            <button onclick="generatePdfNotebook()" class="w-full py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+              <i data-lucide="file-plus" class="w-5 h-5"></i>
+              <span data-i18n="btn_generate">Generate & Download PDF Notebook</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Real-Time Live Preview Canvas -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200 shadow-xl space-y-4 text-center">
+          <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="preview_title">Live Notebook Page Preview</h3>
+          
+          <div class="relative overflow-auto flex justify-center bg-slate-100 rounded-2xl p-6 zero-scroll-preview-container max-h-[62vh] min-h-[280px]">
+            <div class="inline-block shadow-2xl rounded-lg overflow-hidden border border-slate-200 bg-white transition-all">
+              <canvas id="previewCanvas" class="block"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Progress Bar Section -->
+      <div id="progressSection" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-emerald-600 h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Generating your custom PDF notebook pages...</p>
+        </div>
+      </div>
+
+      <!-- Conversion Summary Result Section -->
+      <div id="resultSection" class="hidden max-w-2xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-2xl space-y-8">
+        <div class="text-center space-y-2 border-b border-slate-100 pb-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto font-black">
+            <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900" data-i18n="res_title">Notebook Generated Successfully</h3>
+          <p id="resFileName" class="text-xs text-slate-400 font-medium">SWIF-PDF-lines-A4-Portrait-10pages.pdf</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Document Format</p>
+            <p class="text-lg font-black text-slate-900">PDF Notebook (.pdf)</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#ECFDF5] border border-emerald-200 text-center space-y-1">
+            <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider" data-i18n="res_pages_count">Total Pages</p>
+            <p id="resPagesCount" class="text-2xl font-black text-emerald-600">10 pages (A4 Portrait)</p>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <button id="downloadNotebookBtn" class="flex-1 py-4 px-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span data-i18n="btn_download">Download PDF Notebook</span>
+          </button>
+          <button onclick="resetTool()" class="py-4 px-6 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span data-i18n="btn_reset">Create Another Notebook</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" data-i18n="seo_how_title">
+            Comment fonctionne le <span class="text-[#22C55E]">Générateur de Papier Ligné PDF</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500" data-i18n="seo_how_sub">
+            Créez des trames de feuilles de cours, cahiers d'écriture et feuilles de calcul imprimables au millimètre près.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step1_title">1. Choisissez le Motif de Trame</h3>
+            <p data-i18n="seo_step1_desc">
+              Sélectionnez des lignes de cahier simples, un grand carreau Seyès, une grille 5x5mm ou des points pour bullet journal.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step2_title">2. Personnalisez les Marges & Couleurs</h3>
+            <p data-i18n="seo_step2_desc">
+              Réglez l'écartement des lignes, la couleur des traits et ajoutez optionnellement un en-tête ou votre logo.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step3_title">3. Génération & Impression</h3>
+            <p data-i18n="seo_step3_desc">
+              Téléchargez votre document PDF prêt à l'impression haute résolution sur n'importe quelle imprimante de bureau.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900" data-i18n="seo_why_title">Pourquoi Générer du Papier Ligné avec SWIF PDF ?</h2>
+          <p data-i18n="seo_why_p1">
+            Acheter des blocs de papier spécifiques ou chercher des modèles PDF flous sur Internet fait perdre du temps.
+          </p>
+          <p data-i18n="seo_why_p2">
+            **SWIF PDF** produit des tracés vectoriels parfaits d'une précision absolue au millimètre. Le moteur calcule l'ensemble du rendu **100% dans votre navigateur client**, vous permettant d'imprimer des feuilles blanches en illimité et sans abonnement.
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ ACCORDION ==================== -->
+      <div class="pt-10 border-t border-slate-200/80">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900" data-i18n="faq_title">
+            Foire Aux Questions - <span class="text-[#22C55E]">Générateur de Papier</span>
+          </h2>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q1">Puis-je imprimer le document sur imprimante familiale ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+              Oui ! Les fichiers sont dimensionnés aux formats internationaux A4, A5 et US Letter avec des marges standard.
+            </div>
+          </div>
+
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q2">Puis-je ajouter un logo d'école ou d'entreprise en filigrane ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+              Oui ! Vous pouvez importer le logo de votre choix pour personnaliser vos feuilles de cours et vos blocs-notes.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (PDF Paw Style - Harmonized & Internal Cross-Linking) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF en ligne</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner plusieurs PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="tools-seo-i18n.js"></script>
+  <script src="footer-i18n.js"></script>
+  <script src="lined-paper.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

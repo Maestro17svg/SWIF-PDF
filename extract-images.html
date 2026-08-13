@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extraire les Images d'un PDF en Ligne Gratuit (JPG & PNG) | SWIF PDF</title>
+  <meta name="description" content="Isolez et téléchargez toutes les images et photos contenues dans votre PDF en haute résolution (.ZIP). 100% gratuit et exécuté sans aucun serveur distant.">
+  <meta name="keywords" content="extraire images PDF, récupérer photos PDF, export visuels PDF, extracteur d'images PDF gratuit, enregistrer visuels PDF PNG">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/extract-images.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Extraire les Images d'un Fichier PDF - SWIF PDF">
+  <meta property="og:description" content="Récupérez toutes les images d'un document PDF dans leur résolution d'origine sous forme d'archive ZIP instantanée.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/extract-images.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Outil d'Extraction d'Images PDF SWIF PDF",
+    "url": "https://swifpdf.com/extract-images.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Outil gratuit d'extraction de toutes les ressources graphiques et visuels contenues au sein d'un document PDF en local.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' } }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PDF.js CDN for PDF image rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- PDF-Lib CDN for XObject inspection -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- JSZip CDN for client-side bulk ZIP compression -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="image" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">Extract Images</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Home</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pl"><span class="text-base">🇵🇱</span> Polski</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="ar"><span class="text-base">🇸🇦</span> العربية</a>
+          </div>
+        </div>
+
+        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog"><i data-lucide="book-open" class="w-3.5 h-3.5"></i><span>Blog & Articles</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Extract <span class="text-[#22C55E]">Images</span> from PDF Documents
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto" data-i18n="hero_subtitle">
+          Automatically extract all embedded images, photos and graphics from any PDF file with 100% client-side privacy.
+        </p>
+      </div>
+
+      <!-- Dropzone Section -->
+      <div id="dropzoneSection" class="max-w-3xl mx-auto bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 hover:border-[#22C55E] transition-all">
+        <input type="file" id="fileInput" accept=".pdf" class="hidden">
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="image-plus" class="w-10 h-10"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Drag & drop your PDF file here</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">or</p>
+          </div>
+          <div>
+            <button type="button" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-black text-sm shadow-lg shadow-slate-800/25 inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Select PDF File to Extract Images</span>
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100 flex items-center justify-center gap-2" data-i18n="drop_info">
+          Files are processed 100% locally in your web browser. Zero server upload.
+        </p>
+      </div>
+
+      <!-- Main Interactive Image Gallery Dashboard -->
+      <div id="editorSection" class="hidden space-y-8">
+        
+        <!-- Top Toolbar Actions -->
+        <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <button onclick="toggleSelectAllImages()" type="button" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs flex items-center gap-2 shadow-sm">
+              <i data-lucide="check-square" class="w-4 h-4"></i>
+              <span data-i18n="select_all">Select All Images</span>
+            </button>
+            <span id="selectionCountText" class="text-xs font-bold text-slate-500">0 of 0 images selected</span>
+          </div>
+
+          <div>
+            <button onclick="downloadSelectedImages()" class="py-3.5 px-8 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 flex items-center gap-2">
+              <i id="downloadBtnDynamicIcon" data-lucide="download" class="w-5 h-5"></i>
+              <span id="downloadBtnDynamicText" data-i18n="btn_download_selected">Download Selected Images</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Image Gallery Grid Container -->
+        <div id="imageGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+
+      </div>
+
+      <!-- Progress Bar Section -->
+      <div id="progressSection" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-purple-600 h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Scanning PDF and extracting embedded images...</p>
+        </div>
+      </div>
+
+      <!-- Conversion Summary Result Section -->
+      <div id="resultSection" class="hidden max-w-2xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-2xl space-y-8">
+        <div class="text-center space-y-2 border-b border-slate-100 pb-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto font-black">
+            <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900" data-i18n="res_title">Images Extracted Successfully</h3>
+          <p id="resFileName" class="text-xs text-slate-400 font-medium">document-extracted-images.zip</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="res_filename">Output Archive</p>
+            <p class="text-sm font-black text-slate-900 truncate">ZIP Archive (.zip)</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#ECFDF5] border border-emerald-200 text-center space-y-1">
+            <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider" data-i18n="res_count">Extracted Images</p>
+            <p id="resCountText" class="text-2xl font-black text-emerald-600">4 images</p>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <button id="downloadZipBtn" class="flex-1 py-4 px-8 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-sm shadow-xl shadow-purple-500/25 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span data-i18n="btn_download">Download Images (.ZIP)</span>
+          </button>
+          <button onclick="resetTool()" class="py-4 px-6 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span data-i18n="btn_reset">Extract From Another PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" data-i18n="seo_how_title">
+            Comment fonctionne l'<span class="text-[#22C55E]">Extraction d'Images PDF</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500" data-i18n="seo_how_sub">
+            Récupérez rapidement toutes les photographies, schémas ou illustrations incorporés dans votre document PDF.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step1_title">1. Déposez votre Fichier PDF</h3>
+            <p data-i18n="seo_step1_desc">
+              Sélectionnez le fichier PDF contenant des illustrations. Le moteur analyse l'arborescence des objets binaires.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step2_title">2. Extraction des Ressources</h3>
+            <p data-i18n="seo_step2_desc">
+              Chaque ressource d'image (JPEG, PNG) est isolée sans recompression afin d'en conserver la qualité d'origine exacte.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step3_title">3. Téléchargement en Archive ZIP</h3>
+            <p data-i18n="seo_step3_desc">
+              Obtenez l'ensemble des fichiers visuels regroupés au sein d'un fichier archive `.zip` facilement réutilisable.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900" data-i18n="seo_why_title">Pourquoi Extraire des Images avec SWIF PDF ?</h2>
+          <p data-i18n="seo_why_p1">
+            Réaliser une capture d'écran d'une image intégrée dans un PDF détériore fortement sa résolution et crée des bordures indésirables.
+          </p>
+          <p data-i18n="seo_why_p2">
+            **SWIF PDF** extrait les fichiers image natifs directement depuis la mémoire du PDF. Le traitement s'effectue **100% dans votre navigateur client**, vous garantissant une vitesse immédiate sans téléverser vos documents confidentiels.
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ ACCORDION ==================== -->
+      <div class="pt-10 border-t border-slate-200/80">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900" data-i18n="faq_title">
+            Foire Aux Questions - <span class="text-[#22C55E]">Extraction d'Images PDF</span>
+          </h2>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q1">La qualité des images est-elle préservée ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+              Oui ! Les images sont extraites avec leur définition et leur résolution originales sans perte.
+            </div>
+          </div>
+
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q2">Puis-je télécharger les images individuellement ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+              Oui, l'aperçu vous permet de télécharger chaque image séparément ou d'exporter le lot complet en .zip.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (PDF Paw Style - Harmonized & Internal Cross-Linking) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF en ligne</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner plusieurs PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="tools-seo-i18n.js"></script>
+  <script src="footer-i18n.js"></script>
+  <script src="extract-images.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWIF PDF - Convertisseur, Compresseur, Signature & Flipbook 3D PDF Gratuit</title>
+  <meta name="description" content="Plateforme PDF 100% gratuite et privée. Convertissez Word, Excel, JPG en PDF, compressez, fusionnez, divisez, signez vos documents et lisez vos PDF en Flipbook 3D interactif. Traitement 100% local dans votre navigateur sans téléversement.">
+  <meta name="keywords" content="SWIF PDF, convertisseur PDF gratuit, compresser PDF en ligne, fusionner PDF, diviser PDF, signer PDF gratuit, Flipbook 3D PDF, OCR PDF, filigrane PDF, éditeur PDF gratuit en ligne">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/index.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="SWIF PDF - Outils PDF Gratuit, Compresseur, Éditeur & Flipbook 3D">
+  <meta property="og:description" content="Gérez et éditez tous vos fichiers PDF en toute sécurité directement dans votre navigateur avec traitement 100% local et zéro stockage serveur.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/index.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SWIF PDF",
+    "url": "https://swifpdf.com/",
+    "description": "Plateforme d'outils PDF 100% gratuits et privés fonctionnant directement dans le navigateur client via WebAssembly.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: {
+              DEFAULT: '#22C55E',
+              hover: '#16A34A',
+              dark: '#15803D',
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+              200: '#BBF7D0'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <!-- ==================== HEADER / NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo Left -->
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">Pro Edition</span>
+        </div>
+      </a>
+
+      <!-- Central Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="#tools-section" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_tools">PDF Tools</a>
+        <a href="compress.html" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_compress">Compress</a>
+        <a href="convert.html" class="hover:text-[#22C55E] transition-colors">Convert</a>
+        <a href="blog.html" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_blog">Blog & Articles</a>
+        <a href="#faq-section" class="hover:text-[#22C55E] transition-colors">FAQ</a>
+        <a href="#benefits-section" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_about">About</a>
+      </nav>
+
+      <!-- Right Header Controls: Language Selector & Free Tools Button -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        
+        <!-- Language Selector Dropdown -->
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName" class="hidden sm:inline">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+
+          <!-- Dropdown Menu items -->
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="en">
+              <span class="text-base">🇺🇸</span> English
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="fr">
+              <span class="text-base">🇫🇷</span> Français
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="es">
+              <span class="text-base">🇪🇸</span> Español
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="de">
+              <span class="text-base">🇩🇪</span> Deutsch
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="pt">
+              <span class="text-base">🇵🇹</span> Português
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="it">
+              <span class="text-base">🇮🇹</span> Italiano
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="pl">
+              <span class="text-base">🇵🇱</span> Polski
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-50/60 font-medium text-slate-700" data-lang="ar">
+              <span class="text-base">🇸🇦</span> العربية (RTL)
+            </a>
+          </div>
+        </div>
+
+        <!-- 100% Free Tools CTA Button -->
+        <a href="#tools-section" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition-all active:scale-95">
+          <span>100% Free Tools</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    
+    <!-- ==================== HERO SECTION (ProConverter Blue Layout Structure + Green Identity) ==================== -->
+    <section class="relative pt-10 pb-16 md:pt-16 md:pb-24 bg-gradient-to-b from-[#F0FDF4]/70 via-[#FAFAFA] to-[#FAFAFA] overflow-hidden">
+      <!-- Background Subtle Pattern -->
+      <div class="absolute inset-0 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Text Content Left -->
+          <div class="lg:col-span-6 space-y-6 text-left">
+            
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] text-xs font-extrabold shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-[#22C55E] animate-ping"></span>
+              <span>100% Free &bull; Browser Client-Side &bull; No Upload Storage</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]" data-i18n="hero_title">
+              Simplify Your File <span class="text-[#22C55E]">Conversions</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl" data-i18n="hero_subtitle">
+              Convert, compress and merge—all you need in one place. Fast, secure, and 100% private directly inside your web browser.
+            </p>
+
+            <!-- Action CTA Buttons -->
+            <div class="pt-2 flex flex-wrap items-center gap-4">
+              <a href="#tools-section" class="px-8 py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl shadow-emerald-500/25 transition-all active:scale-95 inline-flex items-center gap-2.5">
+                <span>Get Started Now</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+              <button onclick="openCompressModal()" class="px-6 py-4 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-sm shadow-sm transition-all inline-flex items-center gap-2">
+                <i data-lucide="play-circle" class="w-4 h-4 text-[#22C55E]"></i>
+                <span>Try Demo</span>
+              </button>
+            </div>
+
+            <!-- Bullet points with green checkmarks -->
+            <div class="space-y-3 pt-2 text-sm font-semibold text-slate-700">
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#22C55E] text-white flex items-center justify-center text-xs font-black shadow-sm">✓</div>
+                <span data-i18n="hero_bullet1">Upload Your PDF Document</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#22C55E] text-white flex items-center justify-center text-xs font-black shadow-sm">✓</div>
+                <span data-i18n="hero_bullet2">Select Tool or Output Format</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-[#22C55E] text-white flex items-center justify-center text-xs font-black shadow-sm">✓</div>
+                <span data-i18n="hero_bullet3">Edit, Convert, Save & Download</span>
+              </div>
+            </div>
+
+            <!-- Social Proof Bar -->
+            <div class="pt-4 flex items-center gap-4 border-t border-slate-200/60">
+              <div class="flex -space-x-2">
+                <img class="w-9 h-9 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
+                <img class="w-9 h-9 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
+                <img class="w-9 h-9 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
+              </div>
+              <div class="text-xs font-bold text-slate-600" data-i18n="hero_reviews">
+                12.5k users &bull; <span class="text-emerald-500">★★★★★</span> 1,640 reviews
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Conversion Drag-and-Drop Card Right -->
+          <div class="lg:col-span-6">
+            <div class="bg-white p-8 sm:p-12 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl shadow-emerald-500/5 text-center space-y-6 relative hover:border-[#22C55E] transition-all group">
+              
+              <div class="w-20 h-20 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto shadow-inner group-hover:scale-110 transition-transform">
+                <i data-lucide="file-up" class="w-10 h-10"></i>
+              </div>
+
+              <div class="space-y-1">
+                <h3 class="text-xl font-black text-slate-900" data-i18n="hero_drop_title">Drop your file here</h3>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="hero_drop_or">or choose from your computer</p>
+              </div>
+
+              <div>
+                <button onclick="openCompressModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 transition-all active:scale-95 inline-flex items-center justify-center gap-2">
+                  <i data-lucide="upload" class="w-4 h-4"></i>
+                  <span data-i18n="hero_cta">Upload The PDF To Process</span>
+                </button>
+              </div>
+
+              <div class="pt-2 flex items-center justify-center gap-6 text-xs text-slate-400 font-semibold border-t border-slate-100">
+                <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> 100% Private</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> Instant Speed</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-blue-500"></i> Free Forever</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TOOLS GRID SECTION (ProConverter Grid with Green Pills) ==================== -->
+    <section id="tools-section" class="py-16 bg-white border-t border-b border-slate-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto space-y-3 mb-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F0FDF4] text-[#15803D] text-xs font-black uppercase tracking-wider">
+            All-in-One Suite
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight" data-i18n="tools_heading">
+            All-in-One File <span class="text-[#22C55E]">Conversion Tools</span>
+          </h2>
+          <p class="text-slate-500 text-sm" data-i18n="tools_subheading">
+            Convert, compress and merge—all you need in one place.
+          </p>
+        </div>
+
+        <!-- Filter Controls & Search Bar -->
+        <div class="space-y-6 mb-10">
+          
+          <!-- Category Tabs (Filter Pills) -->
+          <div class="flex flex-wrap items-center justify-center gap-2.5 text-xs font-bold">
+            <button class="filter-pill active px-5 py-2.5 rounded-full transition-all" data-tab="all" data-i18n="tab_all">All Tools</button>
+            <button class="filter-pill bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 px-5 py-2.5 rounded-full transition-all" data-tab="compress" data-i18n="tab_compress">Compress & Merge</button>
+            <button class="filter-pill bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 px-5 py-2.5 rounded-full transition-all" data-tab="convert">Convert PDF</button>
+            <button class="filter-pill bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 px-5 py-2.5 rounded-full transition-all" data-tab="sign" data-i18n="tab_sign">Sign & Edit</button>
+            <button class="filter-pill bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 px-5 py-2.5 rounded-full transition-all" data-tab="organize" data-i18n="tab_organize">Organize</button>
+            <button class="filter-pill bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 px-5 py-2.5 rounded-full transition-all" data-tab="generators" data-i18n="tab_generators">Generators & Security</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="max-w-md mx-auto relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="toolSearchInput" placeholder="Search tools (e.g. Compress, Word, Lined Paper)..." data-i18n="search_placeholder" class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30 focus:border-[#22C55E] transition-all">
+          </div>
+
+        </div>
+
+        <!-- Horizontal Tool Cards Grid -->
+        <div id="toolsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          
+          <!-- 0. 3D Flipbook PDF Reader -->
+          <div onclick="window.location.href='flipbook.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F0FDF4] border-2 border-[#22C55E]/40 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all relative overflow-hidden group" data-category="organize">
+            <span class="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-[#22C55E] text-white text-[9px] font-black uppercase tracking-wider shadow-sm">3D</span>
+            <div class="w-10 h-10 rounded-xl bg-[#22C55E] text-white flex items-center justify-center font-bold shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+              <i data-lucide="book-open" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_flipbook_title">Flipbook 3D PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_flipbook_desc">Lecteur livre virtuel 3D</p>
+            </div>
+          </div>
+
+          <!-- 1. Compress PDF -->
+          <div onclick="window.location.href='compress.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F0FDF4] border border-emerald-200 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="compress">
+            <div class="w-10 h-10 rounded-xl bg-[#22C55E] text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="minimize-2" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_compress_title">Compress PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_compress_desc">Reduce PDF file size</p>
+            </div>
+          </div>
+
+          <!-- 2. Merge PDFs -->
+          <div onclick="window.location.href='merge.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F0FDF4] border border-emerald-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="compress">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="combine" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_merge_title">Merge PDFs</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_merge_desc">Combine multiple files</p>
+            </div>
+          </div>
+
+          <!-- 3. Split & Organize PDF -->
+          <div onclick="window.location.href='split.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F5F0FF] border border-purple-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="organize">
+            <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="scissors" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_split_title">Split & Organize PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_split_desc">Separate & reorder pages</p>
+            </div>
+          </div>
+
+          <!-- 4. PDF to Word -->
+          <div onclick="window.location.href='pdf-to-word.html'" class="tool-card-paw p-4 rounded-2xl bg-[#EBF5FF] border border-blue-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_pdf_word_title">PDF to Word</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_pdf_word_desc">Convert PDF to DOCX</p>
+            </div>
+          </div>
+
+          <!-- 5. PDF to JPG / PNG -->
+          <div onclick="window.location.href='pdf-to-jpg.html'" class="tool-card-paw p-4 rounded-2xl bg-[#FFFBEB] border border-amber-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="image" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_pdf_jpg_title">PDF to JPG / PNG</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_pdf_jpg_desc">Extract high-res images</p>
+            </div>
+          </div>
+
+          <!-- 6. JPG / Image to PDF -->
+          <div onclick="window.location.href='jpg-to-pdf.html'" class="tool-card-paw p-4 rounded-2xl bg-[#ECFDF5] border border-emerald-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-[#22C55E] text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="file-image" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_img_pdf_title">JPG to PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_img_pdf_desc">Convert images to PDF</p>
+            </div>
+          </div>
+
+          <!-- 7. PDF to Excel -->
+          <div onclick="window.location.href='pdf-to-excel.html'" class="tool-card-paw p-4 rounded-2xl bg-[#ECFDF5] border border-green-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-green-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="sheet" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_pdf_excel_title">PDF to Excel</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_pdf_excel_desc">Extract PDF tables to XLS</p>
+            </div>
+          </div>
+
+          <!-- 8. Excel to PDF -->
+          <div onclick="window.location.href='pdf-to-excel.html'" class="tool-card-paw p-4 rounded-2xl bg-[#EBF5FF] border border-teal-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="table" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_excel_pdf_title">Excel to PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_excel_pdf_desc">Convert spreadsheets to PDF</p>
+            </div>
+          </div>
+
+          <!-- 9. PDF to PPT -->
+          <div onclick="window.location.href='pdf-to-ppt.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F0FDF4] border border-emerald-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-orange-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="presentation" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_pdf_ppt_title">PDF to PPT</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_pdf_ppt_desc">Convert PDF slides to PPTX</p>
+            </div>
+          </div>
+
+          <!-- 10. PPT to PDF -->
+          <div onclick="window.location.href='pdf-to-ppt.html'" class="tool-card-paw p-4 rounded-2xl bg-[#FDF0F8] border border-pink-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-pink-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="file-output" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_ppt_pdf_title">PPT to PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_ppt_pdf_desc">Convert presentations to PDF</p>
+            </div>
+          </div>
+
+          <!-- 11. Sign PDF -->
+          <div onclick="window.location.href='sign.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F5F0FF] border border-indigo-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="sign">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="pen-tool" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_sign_title">Sign PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_sign_desc">Sign documents electronically</p>
+            </div>
+          </div>
+
+          <!-- 12. Redact PDF -->
+          <div onclick="window.location.href='redact.html'" class="tool-card-paw p-4 rounded-2xl bg-slate-100 border border-slate-200 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="sign">
+            <div class="w-10 h-10 rounded-xl bg-slate-700 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_redact_title">Redact PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_redact_desc">Black out sensitive text</p>
+            </div>
+          </div>
+
+          <!-- 13. Lined Paper Generator -->
+          <div onclick="window.location.href='lined-paper.html'" class="tool-card-paw p-4 rounded-2xl bg-[#ECFDF5] border border-emerald-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="generators">
+            <div class="w-10 h-10 rounded-xl bg-[#22C55E] text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="notebook" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_lined_paper_title">Lined Paper Generator</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_lined_paper_desc">Custom lines, grid & dots</p>
+            </div>
+          </div>
+
+          <!-- 14. Protect & Unlock PDF -->
+          <div onclick="window.location.href='security.html'" class="tool-card-paw p-4 rounded-2xl bg-[#FFF5F5] border border-red-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="sign">
+            <div class="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="lock" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_security_title">Protect & Unlock PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_security_desc">Encrypt or remove password</p>
+            </div>
+          </div>
+
+          <!-- 15. Rotate PDF -->
+          <div onclick="window.location.href='rotate.html'" class="tool-card-paw p-4 rounded-2xl bg-[#FFFBEB] border border-amber-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="organize">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="rotate-cw" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_rotate_title">Rotate PDF</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_rotate_desc">Rotate pages 90° or 180°</p>
+            </div>
+          </div>
+
+          <!-- 16. Extract Images -->
+          <div onclick="window.location.href='extract-images.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F3E8FF] border border-purple-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="image" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_extract_img_title">Extract Images</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_extract_img_desc">Extract PDF images to ZIP</p>
+            </div>
+          </div>
+
+          <!-- 17. OCR Text Extract -->
+          <div onclick="window.location.href='ocr.html'" class="tool-card-paw p-4 rounded-2xl bg-[#E6FFFA] border border-teal-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="convert">
+            <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="file-search" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_ocr_title">OCR Text Extract</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_ocr_desc">Extract editable text from PDF</p>
+            </div>
+          </div>
+
+          <!-- 18. Add Watermark -->
+          <div onclick="window.location.href='watermark.html'" class="tool-card-paw p-4 rounded-2xl bg-[#F0FDF4] border border-emerald-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="edit">
+            <div class="w-10 h-10 rounded-xl bg-[#22C55E] text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="stamp" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_watermark_title">Add Watermark</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_watermark_desc">Add text or logo watermark</p>
+            </div>
+          </div>
+
+          <!-- 19. Page Numbers -->
+          <div onclick="window.location.href='page-numbers.html'" class="tool-card-paw p-4 rounded-2xl bg-[#EEF2FF] border border-indigo-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="edit">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="binary" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_page_num_title">Page Numbers</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_page_num_desc">Add page numbers to PDF</p>
+            </div>
+          </div>
+
+          <!-- 20. Extract PDF Pages -->
+          <div onclick="window.location.href='extract-pages.html'" class="tool-card-paw p-4 rounded-2xl bg-[#FFF1F2] border border-rose-100 flex items-center gap-3.5 cursor-pointer shadow-sm hover:shadow-md transition-all" data-category="organize">
+            <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <i data-lucide="scissors" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-slate-900 truncate" data-i18n="tool_extract_pages_title">Extract PDF Pages</h3>
+              <p class="text-[11px] text-slate-500 font-medium truncate" data-i18n="tool_extract_pages_desc">Extract specific pages to PDF</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- See All Tools Button -->
+        <div class="mt-12 text-center">
+          <a href="#tools-section" class="px-8 py-3.5 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-extrabold text-xs shadow-lg shadow-emerald-500/25 transition-all inline-flex items-center gap-2">
+            <span>Explore All Tools</span>
+            <i data-lucide="arrow-down" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== WHY CHOOSE SWIF PDF (ProConverter Feature Cards Section) ==================== -->
+    <section id="benefits-section" class="py-16 bg-[#FAFAFA]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto space-y-3 mb-14">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] text-xs font-black uppercase tracking-wider">
+            100% PRIVATE & FAST CONVERSION
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight" data-i18n="ben_heading">
+            Why Choose <span class="text-[#22C55E]">SWIF PDF</span> for all your document needs?
+          </h2>
+          <p class="text-slate-500 text-sm" data-i18n="ben_subheading">
+            From documents to images—manage your PDFs with maximum security and instant speed.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm hover:border-[#22C55E]/40 hover:shadow-lg transition-all space-y-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <i data-lucide="shield-check" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="ben_4_title">Privacy First (100% Local)</h3>
+            <p class="text-xs text-slate-500 leading-relaxed" data-i18n="ben_4_desc">Your data is protected with 100% client-side local browser processing. Fichiers never leave your machine.</p>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm hover:border-[#22C55E]/40 hover:shadow-lg transition-all space-y-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="ben_2_title">Lightning Fast Speed</h3>
+            <p class="text-xs text-slate-500 leading-relaxed" data-i18n="ben_2_desc">Instant WebAssembly conversion engine with zero upload delays or remote queue waiting time.</p>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm hover:border-[#22C55E]/40 hover:shadow-lg transition-all space-y-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <i data-lucide="layers" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="ben_5_title">20+ Free PDF Utilities</h3>
+            <p class="text-xs text-slate-500 leading-relaxed" data-i18n="ben_5_desc">Easily switch between compression, signatures, 3D Flipbook, OCR text extraction, and lined paper generators.</p>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm hover:border-[#22C55E]/40 hover:shadow-lg transition-all space-y-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <i data-lucide="laptop" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="ben_3_title">Cross-Platform & Mobile</h3>
+            <p class="text-xs text-slate-500 leading-relaxed" data-i18n="ben_3_desc">Access and edit files seamlessly from your mobile phone, tablet, or desktop web browser.</p>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm hover:border-[#22C55E]/40 hover:shadow-lg transition-all space-y-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">Enterprise Encryption</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Browser WebAssembly client sandbox keeps sensitive financial, legal, and personal documents fully isolated.</p>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm hover:border-[#22C55E]/40 hover:shadow-lg transition-all space-y-4 group">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="ben_6_title">100% Free & Unlimited</h3>
+            <p class="text-xs text-slate-500 leading-relaxed" data-i18n="ben_6_desc">Enjoy full unlimited features for free—no watermarks, no file size caps, and no hidden subscriptions.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== FULL-WIDTH "GET IT ON MOBILE" BANNER (ProConverter Green Banner) ==================== -->
+    <section class="py-16 bg-gradient-to-r from-[#22C55E] via-[#16A34A] to-[#15803D] text-white shadow-2xl overflow-hidden relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- Text Content Left -->
+          <div class="lg:col-span-7 space-y-6 text-left">
+            <span class="inline-block px-3.5 py-1 rounded-full bg-white/20 text-white text-xs font-black uppercase tracking-wider backdrop-blur-md">
+              Mobile & Tablet Access
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+              Get it on Mobile
+            </h2>
+            <p class="text-sm sm:text-base text-emerald-100 leading-relaxed max-w-xl">
+              Process your documents anywhere, anytime. Fast, secure, and available on all your mobile devices. Convert, compress, and sign documents on the go.
+            </p>
+
+            <div class="pt-2 flex flex-wrap items-center gap-4">
+              <a href="#" class="px-5 py-3 rounded-xl bg-black/90 hover:bg-black text-white text-xs font-bold flex items-center gap-3 transition-all shadow-lg">
+                <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                <div class="text-left">
+                  <p class="text-[9px] text-slate-300 uppercase leading-none">Get it on</p>
+                  <p class="text-sm font-extrabold leading-none mt-1">Google Play</p>
+                </div>
+              </a>
+
+              <a href="#" class="px-5 py-3 rounded-xl bg-black/90 hover:bg-black text-white text-xs font-bold flex items-center gap-3 transition-all shadow-lg">
+                <i data-lucide="apple" class="w-5 h-5 fill-current"></i>
+                <div class="text-left">
+                  <p class="text-[9px] text-slate-300 uppercase leading-none">Download on the</p>
+                  <p class="text-sm font-extrabold leading-none mt-1">App Store</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Graphic Right -->
+          <div class="lg:col-span-5 flex justify-center lg:justify-end">
+            <div class="relative w-full max-w-xs p-4 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 shadow-2xl">
+              <div class="bg-slate-900 rounded-2xl p-5 text-white space-y-4 shadow-inner">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span class="text-xs font-extrabold">SWIF PDF Mobile</span>
+                  <span class="w-2 h-2 rounded-full bg-[#22C55E]"></span>
+                </div>
+                <div class="space-y-2">
+                  <div class="p-3 rounded-xl bg-slate-800 flex items-center gap-3 text-xs">
+                    <i data-lucide="minimize-2" class="w-4 h-4 text-[#22C55E]"></i>
+                    <span>Compress PDF (65% Smaller)</span>
+                  </div>
+                  <div class="p-3 rounded-xl bg-slate-800 flex items-center gap-3 text-xs">
+                    <i data-lucide="pen-tool" class="w-4 h-4 text-[#22C55E]"></i>
+                    <span>Sign PDF Document</span>
+                  </div>
+                  <div class="p-3 rounded-xl bg-slate-800 flex items-center gap-3 text-xs">
+                    <i data-lucide="book-open" class="w-4 h-4 text-[#22C55E]"></i>
+                    <span>3D Flipbook Reader</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ==================== TRUST LOGOS BANNER ==================== -->
+    <section class="py-12 bg-[#FAFAFA] border-t border-b border-slate-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+          Trusted by over 5,000,000+ users & leading organizations worldwide
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-60 grayscale hover:grayscale-0 transition-all text-slate-700 font-black text-sm sm:text-base">
+          <span>Google</span>
+          <span>Amazon</span>
+          <span>Microsoft</span>
+          <span>IBM</span>
+          <span>Salesforce</span>
+          <span>Dropbox</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FAQ ACCORDION SECTION (ProConverter Layout) ==================== -->
+    <section id="faq-section" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Accordion Left -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="space-y-3">
+              <span class="px-3.5 py-1.5 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] text-xs font-black uppercase">
+                Got Questions?
+              </span>
+              <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight" data-i18n="faq_title">
+                Frequently Asked <span class="text-[#22C55E]">Questions</span>
+              </h2>
+              <p class="text-slate-500 text-xs sm:text-sm">Get answers to common questions about SWIF PDF performance, security, and usage.</p>
+            </div>
+
+            <div class="space-y-4 pt-4">
+              
+              <div class="faq-item bg-[#FAFAFA] border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-sm focus:outline-none">
+                  <span data-i18n="faq_q1">What is SWIF PDF?</span>
+                  <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-slate-400 transition-transform"></i>
+                </button>
+                <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+                  SWIF PDF is an online document platform designed to help users manage files with ease directly in the browser—fast, secure, and without installations.
+                </div>
+              </div>
+
+              <div class="faq-item bg-[#FAFAFA] border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-sm focus:outline-none">
+                  <span data-i18n="faq_q2">Is any installation needed?</span>
+                  <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-slate-400 transition-transform"></i>
+                </button>
+                <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+                  No! All tools run directly in your web browser with zero software downloads required.
+                </div>
+              </div>
+
+              <div class="faq-item bg-[#FAFAFA] border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-sm focus:outline-none">
+                  <span data-i18n="faq_q3">Are my files safe?</span>
+                  <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-slate-400 transition-transform"></i>
+                </button>
+                <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a3">
+                  Yes, 100%. All processing happens locally on your computer via WebAssembly. Files are never uploaded to any remote server.
+                </div>
+              </div>
+
+              <div class="faq-item bg-[#FAFAFA] border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-sm focus:outline-none">
+                  <span data-i18n="faq_q4">How does the Lined Page Generator work?</span>
+                  <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-slate-400 transition-transform"></i>
+                </button>
+                <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a4">
+                  Choose line spacing, colors, margin options, and dot/ruled grids, then download or print your template instantly.
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Graphic Right -->
+          <div class="lg:col-span-5">
+            <div class="bg-gradient-to-br from-[#F0FDF4] to-emerald-100/50 p-8 sm:p-12 rounded-3xl border border-emerald-200 text-center space-y-6 shadow-xl">
+              <div class="w-20 h-20 bg-[#22C55E] text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/25">
+                <i data-lucide="help-circle" class="w-10 h-10"></i>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-extrabold text-slate-900">Need Further Assistance?</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">Our support team is available 24/7 to answer your questions regarding document conversion.</p>
+              </div>
+              <a href="contact.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs shadow-md transition-all">
+                <span>Contact Support</span>
+                <i data-lucide="mail" class="w-4 h-4 text-[#22C55E]"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== TESTIMONIALS SECTION ==================== -->
+    <section class="py-16 bg-[#FAFAFA] border-t border-slate-100">
+      <div class="max-w-4xl mx-auto px-4 text-center space-y-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F0FDF4] text-[#15803D] text-xs font-black uppercase">
+          User Feedback
+        </div>
+        <h2 class="text-3xl font-extrabold text-slate-900">
+          What Our <span class="text-[#22C55E]">Customers Say</span>
+        </h2>
+
+        <div class="bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+          <div class="text-emerald-500 text-lg font-black tracking-widest">★★★★★</div>
+          <p class="text-sm sm:text-base text-slate-700 italic leading-relaxed max-w-2xl mx-auto">
+            "SWIF PDF has completely replaced our bloated desktop converters. Being able to compress and sign confidential contracts 100% locally inside our browser without uploading files to third-party servers gives us absolute peace of mind!"
+          </p>
+          <div class="flex items-center justify-center gap-3 pt-2">
+            <img class="w-11 h-11 rounded-full ring-2 ring-[#22C55E] object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Customer Avatar">
+            <div class="text-left">
+              <h4 class="text-xs font-extrabold text-slate-900">David Miller</h4>
+              <p class="text-[10px] text-slate-400 font-semibold">Head of Legal, Apex Group</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MOST POPULAR PDF TOOLS LINK MATRIX ==================== -->
+    <section class="py-16 bg-white border-t border-slate-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-extrabold text-slate-900">
+            Most Popular <span class="text-[#22C55E]">PDF Tools</span>
+          </h2>
+          <p class="text-xs text-slate-500">Quick links to all browser utilities</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs font-semibold text-slate-600">
+          <div class="space-y-2.5">
+            <h3 class="text-slate-900 font-extrabold uppercase text-[11px] tracking-wider text-[#22C55E]">Convert PDF</h3>
+            <ul class="space-y-2">
+              <li><a href="pdf-to-word.html" class="hover:text-[#22C55E] transition-colors">PDF to Word</a></li>
+              <li><a href="pdf-to-jpg.html" class="hover:text-[#22C55E] transition-colors">PDF to JPG / PNG</a></li>
+              <li><a href="pdf-to-excel.html" class="hover:text-[#22C55E] transition-colors">PDF to Excel</a></li>
+              <li><a href="pdf-to-ppt.html" class="hover:text-[#22C55E] transition-colors">PDF to PowerPoint</a></li>
+            </ul>
+          </div>
+
+          <div class="space-y-2.5">
+            <h3 class="text-slate-900 font-extrabold uppercase text-[11px] tracking-wider text-[#22C55E]">Edit PDF</h3>
+            <ul class="space-y-2">
+              <li><a href="sign.html" class="hover:text-[#22C55E] transition-colors">Sign PDF</a></li>
+              <li><a href="watermark.html" class="hover:text-[#22C55E] transition-colors">Add Watermark</a></li>
+              <li><a href="page-numbers.html" class="hover:text-[#22C55E] transition-colors">Add Page Numbers</a></li>
+              <li><a href="redact.html" class="hover:text-[#22C55E] transition-colors">Redact Sensitive Text</a></li>
+            </ul>
+          </div>
+
+          <div class="space-y-2.5">
+            <h3 class="text-slate-900 font-extrabold uppercase text-[11px] tracking-wider text-[#22C55E]">Organize PDF</h3>
+            <ul class="space-y-2">
+              <li><a href="compress.html" class="hover:text-[#22C55E] transition-colors">Compress PDF Size</a></li>
+              <li><a href="merge.html" class="hover:text-[#22C55E] transition-colors">Merge PDF Files</a></li>
+              <li><a href="split.html" class="hover:text-[#22C55E] transition-colors">Split PDF Pages</a></li>
+              <li><a href="rotate.html" class="hover:text-[#22C55E] transition-colors">Rotate PDF Pages</a></li>
+            </ul>
+          </div>
+
+          <div class="space-y-2.5">
+            <h3 class="text-slate-900 font-extrabold uppercase text-[11px] tracking-wider text-[#22C55E]">Security & Viewers</h3>
+            <ul class="space-y-2">
+              <li><a href="flipbook.html" class="hover:text-[#22C55E] transition-colors">3D Flipbook Reader</a></li>
+              <li><a href="ocr.html" class="hover:text-[#22C55E] transition-colors">OCR Text Extraction</a></li>
+              <li><a href="security.html" class="hover:text-[#22C55E] transition-colors">Protect & Password PDF</a></li>
+              <li><a href="lined-paper.html" class="hover:text-[#22C55E] transition-colors">Lined Paper Generator</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RICH SEO EXPLANATORY CONTENT SECTION ==================== -->
+    <section class="py-16 bg-[#FAFAFA] border-t border-slate-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        
+        <div class="text-center max-w-3xl mx-auto space-y-3">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] text-xs font-black uppercase tracking-wider" data-i18n="seo_badge">
+            Guide Complet & Référentiel PDF
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight" data-i18n="seo_title">
+            Tout Savoir sur la Gestion et la Conversion de <span class="text-[#22C55E]">PDF en Ligne</span>
+          </h2>
+          <p class="text-slate-500 text-sm leading-relaxed" data-i18n="seo_sub">
+            Découvrez comment SWIF PDF simplifie l'édition, la conversion et la sécurisation de vos documents professionnels en toute confidentialité.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-slate-600 leading-relaxed">
+          
+          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 space-y-3 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="minimize-2" class="w-5 h-5 text-[#22C55E]"></i>
+              <span data-i18n="seo_c1_title">Compression PDF Sans Perte de Qualité</span>
+            </h3>
+            <p data-i18n="seo_c1_desc">
+              La compression de fichiers PDF est essentielle pour partager facilement des documents volumineux par email ou via des formulaires web. Notre outil de compression PDF en ligne réorganise la structure interne de votre document et optimise les images sans altérer la netteté du texte.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 space-y-3 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="book-open" class="w-5 h-5 text-[#22C55E]"></i>
+              <span data-i18n="seo_c2_title">Lecteur Flipbook 3D Interactif</span>
+            </h3>
+            <p data-i18n="seo_c2_desc">
+              Transformez n'importe quel magazine, catalogue commercial ou livre PDF en une expérience de lecture immersive. Notre lecteur Flipbook 3D simule l'animation réaliste de tournage de page avec ombrage dynamique et bruitage de papier.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 space-y-3 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="combine" class="w-5 h-5 text-[#22C55E]"></i>
+              <span data-i18n="seo_c3_title">Fusion et Découpage de Pages PDF</span>
+            </h3>
+            <p data-i18n="seo_c3_desc">
+              Rassemblez plusieurs rapports en un seul fichier structuré ou extrayez uniquement les pages pertinentes. Avec nos outils de fusion PDF et de découpage de pages, vous réorganisez vos documents en quelques clics.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 space-y-3 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-5 h-5 text-[#22C55E]"></i>
+              <span data-i18n="seo_c4_title">Sécurité et Traitement 100% Client-Side</span>
+            </h3>
+            <p data-i18n="seo_c4_desc">
+              Vos données sont précieuses. SWIF PDF s'exécute intégralement dans le navigateur de votre appareil via WebAssembly. Vos relevés bancaires, pièces d'identité et contrats restent confidentiels et ne sont jamais stockés sur des serveurs tiers.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER (ProConverter Dark Layout + Green Accents) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-5 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-emerald-500/20">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+
+          <!-- Newsletter Form -->
+          <div class="pt-2 space-y-2">
+            <p class="text-xs font-bold text-white uppercase tracking-wider">Subscribe to Updates</p>
+            <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex gap-2 max-w-sm">
+              <input type="email" required placeholder="Enter your email address" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30">
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-extrabold text-xs transition-colors shrink-0 shadow-md">
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Navigation</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="blog.html" class="hover:text-white transition-colors" data-i18n="footer_nav_blog">Blog & Articles SEO</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-4 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions Générales (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Politique de Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ==================== MODALS ==================== -->
+  
+  <!-- Lined Paper Modal -->
+  <div id="linedModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 max-h-[90vh] flex flex-col">
+      
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900" data-i18n="modal_lined_title">Interactive Lined Page Generator</h3>
+          <p class="text-xs text-slate-500" data-i18n="modal_lined_subtitle">Customize your ruled, grid, or dot-grid paper and download or print.</p>
+        </div>
+        <button onclick="closeLinedPaperModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start overflow-y-auto pr-2">
+        
+        <div class="md:col-span-5 space-y-4 text-xs font-semibold text-slate-700">
+          <div>
+            <label class="block mb-1.5" data-i18n="lbl_pattern">Pattern Style:</label>
+            <select id="optPattern" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+              <option value="ruled">Ruled Lines (Ligné)</option>
+              <option value="grid">Grid (Quadrillé)</option>
+              <option value="dots">Dot Grid (Points)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block mb-1.5" data-i18n="lbl_spacing">Line Spacing:</label>
+            <select id="optSpacing" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+              <option value="20">Narrow (5mm)</option>
+              <option value="28" selected>Medium (7mm)</option>
+              <option value="38">Wide (10mm)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block mb-1.5" data-i18n="lbl_color">Line Color:</label>
+            <select id="optColor" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+              <option value="#94a3b8" selected>Soft Slate (Gris)</option>
+              <option value="#22c55e">Emerald Green (Vert)</option>
+              <option value="#334155">Dark Slate (Foncé)</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2 pt-2">
+            <input type="checkbox" id="optMargin" checked class="w-4 h-4 text-[#22C55E] rounded">
+            <label for="optMargin" data-i18n="lbl_margin">Red Margin Line</label>
+          </div>
+
+          <div class="pt-6 space-y-3">
+            <button onclick="downloadPaperImage()" class="w-full py-3 rounded-xl bg-[#22C55E] text-white font-bold text-xs hover:bg-[#16A34A] transition-colors shadow-md flex items-center justify-center gap-2">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span data-i18n="btn_download_png">Download Image</span>
+            </button>
+            <button onclick="printPaperCanvas()" class="w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
+              <i data-lucide="printer" class="w-4 h-4"></i>
+              <span data-i18n="btn_print">Print / Export PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="md:col-span-7 flex justify-center bg-slate-100 p-4 rounded-2xl border border-slate-200">
+          <canvas id="paperCanvas" width="600" height="750" class="max-w-full h-auto rounded-lg shadow-md"></canvas>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Compress Demo Modal -->
+  <div id="compressModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+        <h3 class="text-xl font-bold text-slate-900" data-i18n="modal_compress_title">PDF Compression Demo</h3>
+        <button onclick="closeCompressModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <div class="space-y-6">
+        <div class="border-2 border-dashed border-emerald-200 bg-[#F0FDF4] rounded-2xl p-8 text-center space-y-3">
+          <i data-lucide="upload-cloud" class="w-12 h-12 text-[#22C55E] mx-auto"></i>
+          <p class="text-xs font-semibold text-slate-700" data-i18n="modal_compress_drop">Drop your PDF file here to simulate compression</p>
+          <p class="text-[10px] text-slate-500" data-i18n="modal_compress_info">Compression ratio: ~65% size reduction without quality loss.</p>
+        </div>
+
+        <div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
+            <div id="compressProgressBar" class="bg-[#22C55E] h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="compressStatus" class="text-xs text-center font-semibold text-slate-600">Ready</p>
+        </div>
+
+        <button id="btnStartSim" onclick="runCompressSimulation()" class="w-full py-3.5 rounded-xl bg-[#22C55E] text-white font-bold text-xs hover:bg-[#16A34A] transition-colors shadow-md shadow-emerald-500/20" data-i18n="btn_simulate">
+          Start Compression Demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign In Modal -->
+  <div id="loginModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-slate-100 space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+        <h3 class="text-xl font-bold text-slate-900" data-i18n="nav_login">Sign In</h3>
+        <button onclick="closeLoginModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center font-bold">✕</button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); alert('Signed in successfully!'); closeLoginModal();" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+          <input type="email" required placeholder="name@example.com" class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+          <input type="password" required placeholder="••••••••" class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+        </div>
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-[#22C55E] text-white font-bold text-xs hover:bg-[#16A34A] transition-colors shadow-md">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

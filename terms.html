@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conditions Générales d'Utilisation (CGU) - SWIF PDF</title>
+  <meta name="description" content="Consultez les Conditions Générales d'Utilisation (CGU) de SWIF PDF. Plateforme d'édition et de conversion PDF 100% gratuite et locale sans transfert sur serveur.">
+  <meta name="keywords" content="CGU SWIF PDF, conditions utilisation PDF, politique d'utilisation, éditeur PDF gratuit, conversion PDF sécurisée">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/terms.html">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coral: {
+              DEFAULT: '#22C55E',
+              hover: '#16A34A',
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <!-- ==================== HEADER / NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo Left -->
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1" data-i18n="header_sub">Terms of Service</span>
+        </div>
+      </a>
+
+      <!-- Central Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Home</span>
+        </a>
+        <a href="flipbook.html" class="hover:text-[#22C55E] transition-colors">Flipbook 3D</a>
+        <a href="contact.html" class="hover:text-[#22C55E] transition-colors">Contact</a>
+      </nav>
+
+      <!-- Right Header Controls: Language Selector & Sign In Button -->
+      <div class="flex items-center gap-4">
+        
+        <!-- Language Selector Dropdown -->
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+
+          <!-- Dropdown Menu items -->
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="en">
+              <span class="text-base">🇺🇸</span> English
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="fr">
+              <span class="text-base">🇫🇷</span> Français
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="es">
+              <span class="text-base">🇪🇸</span> Español
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="de">
+              <span class="text-base">🇩🇪</span> Deutsch
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="pt">
+              <span class="text-base">🇵🇹</span> Português
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="it">
+              <span class="text-base">🇮🇹</span> Italiano
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="pl">
+              <span class="text-base">🇵🇱</span> Polski
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="ar">
+              <span class="text-base">🇸🇦</span> العربية (RTL)
+            </a>
+          </div>
+        </div>
+
+        <!-- Blog & Articles Link -->`n        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog">`n          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>`n          <span>Blog & Articles</span>`n        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <!-- Page Title Header -->
+      <div class="text-center space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F0FDF4] text-[#22C55E] text-xs font-extrabold uppercase tracking-wider">
+          Document Juridique
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          Conditions Générales <span class="text-[#22C55E]">d'Utilisation</span>
+        </h1>
+        <p class="text-slate-500 text-sm max-w-xl mx-auto">
+          Dernière mise à jour : 12 Août 2026 &bull; Plateforme SWIF PDF Paw Edition
+        </p>
+      </div>
+
+      <!-- Legal Content Card -->
+      <div class="bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/40 space-y-8 text-sm text-slate-600 leading-relaxed">
+        
+        <section class="space-y-3">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center text-xs font-black">1</span>
+            Objet et Acceptation des CGU
+          </h2>
+          <p>
+            Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») ont pour objet de définir les modalités et conditions dans lesquelles la plateforme **SWIF PDF** met à la disposition des utilisateurs ses outils en ligne d'édition, de conversion, de compression et de visualisation de documents PDF.
+          </p>
+          <p>
+            L'accès et l'utilisation du site impliquent l'acceptation pleine et entière de l'utilisateur aux présentes conditions. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.
+          </p>
+        </section>
+
+        <section class="space-y-3 border-t border-slate-100 pt-6">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center text-xs font-black">2</span>
+            Traitement 100% Client-Side (Navigateur Local)
+          </h2>
+          <p>
+            **SWIF PDF** repose sur une architecture technologique innovante basée sur WebAssembly et JavaScript. Tous les traitements de documents (compression, fusion, division, signature, OCR, conversion et lecteur Flipbook 3D) sont effectués **strictement en local dans le navigateur web de l'utilisateur**.
+          </p>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-900 text-xs font-medium space-y-1">
+            <p class="font-bold">✓ Garantie Absolue de Confidentialité :</p>
+            <p>Aucun fichier PDF téléversé ou sélectionné par l'utilisateur ne transite ni n'est stocké sur des serveurs distants. Les fichiers restent sous le contrôle exclusif de votre terminal informatique.</p>
+          </div>
+        </section>
+
+        <section class="space-y-3 border-t border-slate-100 pt-6">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center text-xs font-black">3</span>
+            Gratuité et Accès au Service
+          </h2>
+          <p>
+            Les outils proposés par **SWIF PDF** sont mis à disposition gratuitement pour tous les utilisateurs, sans limitation artificielle du nombre de conversions ou du volume des documents, et sans obligation de création de compte ou de carte bancaire.
+          </p>
+          <p>
+            L'éditeur s'efforce d'assurer un accès continu au site 24h/24 et 7j/7, mais se réserve le droit d'interrompre l'accès pour des raisons de maintenance, de mise à jour ou d'amélioration technique.
+          </p>
+        </section>
+
+        <section class="space-y-3 border-t border-slate-100 pt-6">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center text-xs font-black">4</span>
+            Propriété Intellectuelle
+          </h2>
+          <p>
+            Tous les contenus originaux présents sur le site (structure, design, code source, graphismes, icônes, logo **SWIF PDF**) sont la propriété exclusive de l'éditeur et sont protégés par les lois internationales sur la propriété intellectuelle.
+          </p>
+          <p>
+            L'utilisateur conserve la pleine et entière propriété intellectuelle de tous les documents qu'il traite via nos outils. **SWIF PDF** n'acquiert aucun droit sur les fichiers traités.
+          </p>
+        </section>
+
+        <section class="space-y-3 border-t border-slate-100 pt-6">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center text-xs font-black">5</span>
+            Limitation de Responsabilité
+          </h2>
+          <p>
+            Le service est fourni « en l'état » et « selon disponibilité ». Bien que nous utilisions les bibliothèques WebAssembly les plus fiables (PDF.js, PDF-Lib, Tesseract.js), l'utilisateur reconnaît utiliser le service à ses propres risques. **SWIF PDF** ne saurait être tenu responsable en cas de perte de données ou d'incompatibilité de format de fichier.
+          </p>
+        </section>
+
+        <section class="space-y-3 border-t border-slate-100 pt-6">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center text-xs font-black">6</span>
+            Modification des CGU et Contact
+          </h2>
+          <p>
+            **SWIF PDF** se réserve le droit de modifier les présentes CGU à tout moment afin de respecter les évolutions légales ou techniques. Pour toute question juridique ou d'utilisation, vous pouvez nous contacter via notre <a href="contact.html" class="text-[#22C55E] font-bold hover:underline">Page de Contact</a>.
+          </p>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée avec traitement local dans votre navigateur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="text-white font-bold transition-colors" data-i18n="footer_legal_terms">Conditions Générales (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Politique de Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="footer-i18n.js"></script>
+  <script src="app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

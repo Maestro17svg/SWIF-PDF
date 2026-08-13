@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convertir PDF en Word Gratuitement en Ligne (DOCX) | SWIF PDF</title>
+  <meta name="description" content="Convertissez vos documents PDF en fichiers Word éditable (.docx) gratuitement en ligne. Extrayez le texte avec mise en page conservée 100% localement dans le navigateur.">
+  <meta name="keywords" content="convertir PDF en Word, PDF vers Word gratuit, export DOCX PDF, éditer texte PDF dans Word, convertisseur PDF en ligne">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/pdf-to-word.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Convertir PDF en Word DOCX Gratuitement - SWIF PDF">
+  <meta property="og:description" content="Transformez vos fichiers PDF en documents Word modifiables en quelques secondes sans aucun transfert sur serveur.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/pdf-to-word.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Convertisseur PDF vers Word SWIF PDF",
+    "url": "https://swifpdf.com/pdf-to-word.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Outil gratuit de conversion de fichiers PDF vers le format Word (.docx) avec traitement local client-side sans serveur.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">PDF to Word</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Home</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pl"><span class="text-base">🇵🇱</span> Polski</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="ar"><span class="text-base">🇸🇦</span> العربية</a>
+          </div>
+        </div>
+
+        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog"><i data-lucide="book-open" class="w-3.5 h-3.5"></i><span>Blog & Articles</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Convert <span class="text-[#22C55E]">PDF</span> to Word Online
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto" data-i18n="hero_subtitle">
+          Extract text and convert your PDF files into editable Word documents directly in your browser.
+        </p>
+      </div>
+
+      <!-- Dropzone Section -->
+      <div id="dropzoneSection" class="bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 hover:border-[#22C55E] transition-all">
+        <input type="file" id="fileInput" accept=".pdf" class="hidden">
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="file-text" class="w-10 h-10"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Drag & drop your PDF file here</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">or</p>
+          </div>
+          <div>
+            <button type="button" class="px-8 py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Select PDF File</span>
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100 flex items-center justify-center gap-2" data-i18n="drop_info">
+          Files are processed 100% locally in your web browser. Zero server upload.
+        </p>
+      </div>
+
+      <!-- Settings Section -->
+      <div id="settingsSection" class="hidden bg-white p-8 rounded-3xl border border-slate-200 shadow-xl space-y-8">
+        <div class="flex items-center justify-between p-4 rounded-2xl bg-[#F0FDF4] border border-emerald-100">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-[#22C55E] text-white flex items-center justify-center font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p id="lblFileName" class="text-sm font-bold text-slate-900 truncate">document.pdf</p>
+              <p id="lblFileSize" class="text-xs text-slate-500">2.40 MB</p>
+            </div>
+          </div>
+          <button onclick="resetTool()" class="text-xs font-semibold text-slate-400 hover:text-slate-600">Change</button>
+        </div>
+
+        <button onclick="startPdfToWord()" class="w-full py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+          <i data-lucide="file-text" class="w-5 h-5"></i>
+          <span data-i18n="btn_convert">Convert to Word Now</span>
+        </button>
+      </div>
+
+      <!-- Progress Section -->
+      <div id="progressSection" class="hidden bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-[#22C55E] h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Extracting text content...</p>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="resultSection" class="hidden bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-2xl space-y-8">
+        <div class="text-center space-y-2 border-b border-slate-100 pb-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto font-black">
+            <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900" data-i18n="res_title">Conversion Summary</h3>
+          <p id="resFileName" class="text-xs text-slate-400 font-medium">document.txt</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="res_format">Output Format</p>
+            <p id="resOutputFormat" class="text-lg font-black text-slate-900">Word Editable Document</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#ECFDF5] border border-emerald-200 text-center space-y-1">
+            <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider" data-i18n="res_size">Converted File Size</p>
+            <p id="resConvertedSize" class="text-2xl font-black text-emerald-600">1.20 MB</p>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <button onclick="downloadWordFile()" class="flex-1 py-4 px-8 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span data-i18n="btn_download">Download Word Document</span>
+          </button>
+          <button onclick="resetTool()" class="py-4 px-6 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span data-i18n="btn_reset">Convert Another PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" data-i18n="seo_how_title">
+            Comment fonctionne la <span class="text-[#22C55E]">Conversion PDF vers Word (DOCX)</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500" data-i18n="seo_how_sub">
+            Rendez vos documents PDF à nouveau éditables et modifiables sous Microsoft Word en quelques clics.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step1_title">1. Analyse du Fichier PDF</h3>
+            <p data-i18n="seo_step1_desc">
+              Glissez votre PDF dans le convertisseur. Le moteur d'analyse PDF.js extrait la structure du texte, les paragraphes et la mise en forme globale.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-orange-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step2_title">2. Reconstitution du Document Word</h3>
+            <p data-i18n="seo_step2_desc">
+              Notre algorithme traduit la mise en page en balisage équivalent Word (.docx) sans déformer vos blocs de texte ni vos paragraphes.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step3_title">3. Téléchargement & Édition</h3>
+            <p data-i18n="seo_step3_desc">
+              Téléchargez votre fichier Word prêt à l'emploi et modifiez directement vos textes dans Microsoft Word ou Google Docs.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900" data-i18n="seo_why_title">Pourquoi Convertir un PDF en Word avec SWIF PDF ?</h2>
+          <p data-i18n="seo_why_p1">
+            Vous devez apporter des corrections importantes sur un rapport ou un contrat envoyé au format PDF dont vous avez perdu le fichier source Word ? Taper à nouveau l'intégralité du texte prendrait des heures.
+          </p>
+          <p data-i18n="seo_why_p2">
+            **SWIF PDF** simplifie le processus en générant un fichier Word réutilisable. Le traitement est effectué **100% dans votre navigateur client**, garantissant la protection intégrale de vos données personnelles et confidentielles.
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ ACCORDION ==================== -->
+      <div class="pt-10 border-t border-slate-200/80">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900" data-i18n="faq_title">
+            Foire Aux Questions - <span class="text-[#22C55E]">Conversion PDF vers Word</span>
+          </h2>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q1">Le fichier Word obtenu est-il vraiment modifiable ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+              Oui ! Le fichier .docx généré s'ouvre dans Microsoft Word, LibreOffice ou Google Docs avec la possibilité de modifier directement le texte.
+            </div>
+          </div>
+
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q2">Mes données confidentielles sont-elles protégées ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+              Absolument. La conversion s'exécute dans votre propre navigateur. Aucun document n'est envoyé ni conservé sur un serveur distant.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (PDF Paw Style - Harmonized & Internal Cross-Linking) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF en ligne</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner plusieurs PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="tools-seo-i18n.js"></script>
+  <script src="footer-i18n.js"></script>
+  <script src="pdf-to-word.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

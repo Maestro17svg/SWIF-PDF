@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter un Filigrane PDF en Ligne Gratuit (Texte & Logo) | SWIF PDF</title>
+  <meta name="description" content="Protégez vos droits d'auteur en ajoutant un filigrane personnalisé (texte ou logo image) sur toutes les pages de vos PDF. 100% gratuit et exécuté en local.">
+  <meta name="keywords" content="ajouter filigrane PDF, watermark PDF gratuit, tampon confidentiel PDF, tatouage numérique PDF, protéger propriété intellectuelle PDF">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/watermark.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Ajouter un Filigrane sur un PDF Gratuitement - SWIF PDF">
+  <meta property="og:description" content="Personnalisez la transparence, la taille et la rotation de votre filigrane sur vos documents PDF directement dans votre navigateur.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/watermark.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Outil de Filigrane PDF SWIF PDF",
+    "url": "https://swifpdf.com/watermark.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Outil d'incrustation de tatouages numériques et logos filigranés sur les fichiers PDF en local sans serveur.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' } }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PDF.js CDN for live preview rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- PDF-Lib CDN for client-side vector watermark embedding -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="stamp" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">Add Watermark</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Home</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pl"><span class="text-base">🇵🇱</span> Polski</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="ar"><span class="text-base">🇸🇦</span> العربية</a>
+          </div>
+        </div>
+
+        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog"><i data-lucide="book-open" class="w-3.5 h-3.5"></i><span>Blog & Articles</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Add <span class="text-[#22C55E]">Watermark</span> to PDF
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto" data-i18n="hero_subtitle">
+          Add custom text or image watermarks to your PDF pages with full control over position, angle, opacity and page range.
+        </p>
+      </div>
+
+      <!-- Dropzone Section -->
+      <div id="dropzoneSection" class="max-w-3xl mx-auto bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 hover:border-[#22C55E] transition-all">
+        <input type="file" id="fileInput" accept=".pdf" class="hidden">
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="stamp" class="w-10 h-10"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Drag & drop your PDF file here</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">or</p>
+          </div>
+          <div>
+            <button type="button" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-black text-sm shadow-lg shadow-slate-800/25 inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Select PDF File for Watermark</span>
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100 flex items-center justify-center gap-2" data-i18n="drop_info">
+          Files are processed 100% locally in your web browser. Zero server upload.
+        </p>
+      </div>
+
+      <!-- Main Interactive Watermark Dashboard (Control Sidebar + Live Canvas Preview) -->
+      <div id="editorSection" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Control Sidebar (4 cols) -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+          
+          <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+            <h2 class="text-lg font-extrabold text-slate-900">Watermark Controls</h2>
+            <i data-lucide="sliders" class="w-5 h-5 text-slate-400"></i>
+          </div>
+
+          <!-- Mode Switcher Tab Bar -->
+          <div class="flex rounded-2xl bg-slate-100 p-1.5 gap-1">
+            <button id="modeTextBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl font-extrabold text-xs bg-[#22C55E] text-white shadow-md transition-all" data-i18n="mode_text">
+              Text Watermark
+            </button>
+            <button id="modeImageBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl font-extrabold text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all" data-i18n="mode_image">
+              Image / Logo Watermark
+            </button>
+          </div>
+
+          <!-- Text Mode Options -->
+          <div id="textOptionsBox" class="space-y-4">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="text_input_label">Watermark Text:</label>
+              <input type="text" id="watermarkTextInput" value="CONFIDENTIAL" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-emerald-500/30">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="font_label">Font Family:</label>
+                <select id="fontSelect" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-slate-50">
+                  <option value="Helvetica">Helvetica</option>
+                  <option value="TimesRoman">Times Roman</option>
+                  <option value="Courier">Courier</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="text_color_label">Text Color:</label>
+                <input type="color" id="textColorInput" value="#22C55E" class="w-full h-10 p-1 rounded-xl border border-slate-200 cursor-pointer bg-slate-50">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-xs font-bold text-slate-700" data-i18n="rotation_label">Rotation Angle (0° to 360°):</label>
+                <span id="rotationValueText" class="text-xs font-extrabold text-[#22C55E]">315°</span>
+              </div>
+              <input type="range" id="rotationRange" min="0" max="360" value="315" class="w-full accent-[#22C55E] cursor-pointer">
+            </div>
+          </div>
+
+          <!-- Image Mode Options -->
+          <div id="imageOptionsBox" class="hidden space-y-4">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="image_upload_label">Upload Image / Logo (PNG/JPG):</label>
+              <input type="file" id="imageFileInput" accept="image/png, image/jpeg" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-[#F0FDF4] file:text-[#22C55E] hover:file:bg-orange-100 cursor-pointer">
+            </div>
+            
+            <div id="imagePreviewBox" class="hidden relative w-full h-24 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center p-2">
+              <img id="imagePreviewImg" class="max-h-full max-w-full object-contain zero-scroll-preview-canvas">
+              <button onclick="removeUploadedImage()" type="button" class="absolute top-2 right-2 w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-xs shadow-md hover:bg-red-700">
+                &times;
+              </button>
+            </div>
+          </div>
+
+          <!-- Opacity Slider -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-bold text-slate-700" data-i18n="opacity_label">Watermark Opacity:</label>
+              <span id="opacityValueText" class="text-xs font-extrabold text-[#22C55E]">35%</span>
+            </div>
+            <input type="range" id="opacityRange" min="0.05" max="1.0" step="0.05" value="0.35" class="w-full accent-[#22C55E] cursor-pointer">
+          </div>
+
+          <!-- Position & Layering Controls -->
+          <div class="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="pos_label">Watermark Position:</label>
+              <select id="positionSelect" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white">
+                <option value="center" data-i18n="pos_center">Center (Filigree)</option>
+                <option value="custom" data-i18n="pos_custom">Free Drag & Drop (Custom)</option>
+                <option value="tile" data-i18n="pos_tile">Tile / Mosaic Grid</option>
+                <option value="top-right" data-i18n="pos_top_right">Top Right</option>
+                <option value="top-left" data-i18n="pos_top_left">Top Left</option>
+                <option value="bottom-right" data-i18n="pos_bottom_right">Bottom Right</option>
+                <option value="bottom-left" data-i18n="pos_bottom_left">Bottom Left</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="layer_label">Watermark Layer:</label>
+              <select id="layerSelect" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white">
+                <option value="bg" data-i18n="layer_bg">Background (Behind Page Content)</option>
+                <option value="fg" data-i18n="layer_fg">Foreground (Above Page Content)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="page_range_label">Apply Watermark To:</label>
+              <select id="pageRangeSelect" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white">
+                <option value="all" data-i18n="range_all">All Pages</option>
+                <option value="first" data-i18n="range_first">First Page Only</option>
+                <option value="custom" data-i18n="range_custom">Custom Page Range (e.g. 2-5)</option>
+              </select>
+              <div id="customRangeBox" class="hidden pt-2">
+                <input type="text" id="customRangeInput" placeholder="e.g. 2-5" class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-white">
+              </div>
+            </div>
+          </div>
+
+          <!-- Main CTA Action -->
+          <div class="pt-2">
+            <button onclick="applyWatermarkAndDownload()" class="w-full py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+              <i data-lucide="stamp" class="w-5 h-5"></i>
+              <span data-i18n="btn_apply">Apply Watermark & Download PDF</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Live Canvas Preview Container (7 cols) -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200 shadow-xl space-y-4 flex flex-col items-center justify-center">
+          <div class="w-full flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="preview_title">Live Page Watermark Preview</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Page 1</span>
+          </div>
+
+          <div class="w-full zero-scroll-preview-container max-h-[62vh] min-h-[280px] flex items-center justify-center bg-slate-100/60 rounded-2xl p-4 overflow-auto border border-slate-200/80 select-none touch-none">
+            <canvas id="previewCanvas" class="max-w-full shadow-lg rounded-xl border border-slate-200 bg-white select-none touch-none cursor-grab zero-scroll-preview-canvas"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Progress Bar Section -->
+      <div id="progressSection" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-[#22C55E] h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Applying watermark to PDF pages...</p>
+        </div>
+      </div>
+
+      <!-- Conversion Summary Result Section -->
+      <div id="resultSection" class="hidden max-w-2xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-2xl space-y-8">
+        <div class="text-center space-y-2 border-b border-slate-100 pb-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto font-black">
+            <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900" data-i18n="res_title">Watermark Applied Successfully</h3>
+          <p id="resFileName" class="text-xs text-slate-400 font-medium">document-watermarked.pdf</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="res_filename">Output File</p>
+            <p class="text-sm font-black text-slate-900 truncate">Watermarked PDF</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#ECFDF5] border border-emerald-200 text-center space-y-1">
+            <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider" data-i18n="res_mode">Watermark Type</p>
+            <p id="resModeText" class="text-sm font-black text-emerald-600">Text Watermark</p>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <button id="downloadWatermarkedBtn" class="flex-1 py-4 px-8 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span data-i18n="btn_download">Download Watermarked PDF</span>
+          </button>
+          <button onclick="resetTool()" class="py-4 px-6 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span data-i18n="btn_reset">Watermark Another PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" data-i18n="seo_how_title">
+            Comment fonctionne l'ajout de <span class="text-[#22C55E]">Filigrane sur Fichier PDF</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500" data-i18n="seo_how_sub">
+            Marquez vos documents confidentiels avec votre logo ou un texte personnalisé ("CONFIDENTIEL", "SPÉCIMEN", "DRAFT").
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step1_title">1. Saisissez votre Filigrane</h3>
+            <p data-i18n="seo_step1_desc">
+              Tapez le texte de votre choix ou importez votre logo d'entreprise au format image PNG transparente.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-orange-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step2_title">2. Ajustez le Style Visuel</h3>
+            <p data-i18n="seo_step2_desc">
+              Réglez l'opacité (transparence), l'angle de rotation (ex: 45° en diagonale) et la taille de la police d'incrustation.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step3_title">3. Application sur toutes les Pages</h3>
+            <p data-i18n="seo_step3_desc">
+              Appliquez la marque en 1-clic sur l'ensemble des pages du document et téléchargez votre PDF tatoué.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900" data-i18n="seo_why_title">Pourquoi Filigraner vos PDF avec SWIF PDF ?</h2>
+          <p data-i18n="seo_why_p1">
+            Partager un projet de contrat, une ébauche de création graphique ou un document interne comporte toujours le risque d'une réutilisation non autorisée. Apposer un filigrane visible "CONFIDENTIEL" dissroie toute tentative de copie.
+          </p>
+          <p data-i18n="seo_why_p2">
+            **SWIF PDF** applique vos tatouages numériques directement dans votre navigateur via WebAssembly. Aucune donnée n'est envoyée sur un serveur distant, vous garantissant un contrôle absolu sur la confidentialité de vos fichiers.
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ ACCORDION ==================== -->
+      <div class="pt-10 border-t border-slate-200/80">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900" data-i18n="faq_title">
+            Foire Aux Questions - <span class="text-[#22C55E]">Filigrane PDF</span>
+          </h2>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q1">Puis-je ajouter un logo sous forme d'image ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+              Oui ! Vous pouvez choisir entre un filigrane textuel ou importer une image PNG de votre logo.
+            </div>
+          </div>
+
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q2">Le filigrane altère-t-il le texte original ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+              Non ! Grâce au réglage de la transparence (opacité), le texte sous-jacent reste parfaitement lisible.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (PDF Paw Style - Harmonized & Internal Cross-Linking) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF en ligne</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner plusieurs PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="tools-seo-i18n.js"></script>
+  <script src="footer-i18n.js"></script>
+  <script src="watermark.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

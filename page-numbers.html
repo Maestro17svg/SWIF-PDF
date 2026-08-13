@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Numéroter les Pages d'un PDF en Ligne Gratuit | SWIF PDF</title>
+  <meta name="description" content="Insérez automatiquement des numéros de page ("Page X sur Y") en haut ou en bas de vos PDF. Personnalisez l'emplacement et le style 100% en local.">
+  <meta name="keywords" content="numéroter PDF, ajouter numéro de page PDF, pagination PDF gratuit, bas de page PDF, numérotation automatique PDF">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/page-numbers.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Numéroter les Pages d'un PDF Gratuitement - SWIF PDF">
+  <meta property="og:description" content="Paginez vos rapports et livres PDF facilement avec numérotation personnalisée et choix de l'alignement.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/page-numbers.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Outil de Numérotation de Pages PDF SWIF PDF",
+    "url": "https://swifpdf.com/page-numbers.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Outil d'ajout de pagination automatique sur les documents PDF en local sans serveur.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' } }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- PDF.js CDN for live preview rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- PDF-Lib CDN for client-side vector page numbering -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="binary" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">Page Numbers</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Home</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pl"><span class="text-base">🇵🇱</span> Polski</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="ar"><span class="text-base">🇸🇦</span> العربية</a>
+          </div>
+        </div>
+
+        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog"><i data-lucide="book-open" class="w-3.5 h-3.5"></i><span>Blog & Articles</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Add <span class="text-[#22C55E]">Page Numbers</span> to PDF
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto" data-i18n="hero_subtitle">
+          Add customizable page numbers to your PDF document with full control over position, format, font, and cover page options.
+        </p>
+      </div>
+
+      <!-- Dropzone Section -->
+      <div id="dropzoneSection" class="max-w-3xl mx-auto bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 hover:border-[#22C55E] transition-all">
+        <input type="file" id="fileInput" accept=".pdf" class="hidden">
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="binary" class="w-10 h-10"></i>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Drag & drop your PDF file here</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">or</p>
+          </div>
+          <div>
+            <button type="button" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-black text-sm shadow-lg shadow-slate-800/25 inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Select PDF File to Add Page Numbers</span>
+            </button>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100 flex items-center justify-center gap-2" data-i18n="drop_info">
+          Files are processed 100% locally in your web browser. Zero server upload.
+        </p>
+      </div>
+
+      <!-- Main Interactive Page Numbering Dashboard -->
+      <div id="editorSection" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Control Sidebar (5 cols) -->
+        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+          
+          <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+            <h2 class="text-lg font-extrabold text-slate-900">Page Number Settings</h2>
+            <i data-lucide="sliders" class="w-5 h-5 text-slate-400"></i>
+          </div>
+
+          <!-- Format Selector -->
+          <div>
+            <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="format_label">Numbering Format:</label>
+            <select id="numberFormatSelect" class="w-full p-3.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-slate-50 focus:ring-2 focus:ring-emerald-500/30">
+              <option value="Page {n}" data-i18n="fmt_page_n">Page {n}</option>
+              <option value="{n} / {total}" data-i18n="fmt_n_total">{n} / {total}</option>
+              <option value="Page {n} of {total}" data-i18n="fmt_page_n_total">Page {n} of {total}</option>
+              <option value="{n}" data-i18n="fmt_n_only">{n} (Number only)</option>
+            </select>
+          </div>
+
+          <!-- Position Selector -->
+          <div>
+            <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="pos_label">Position on Page:</label>
+            <select id="positionSelect" class="w-full p-3.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-slate-50 focus:ring-2 focus:ring-emerald-500/30">
+              <option value="bottom-center" data-i18n="pos_bottom_center">Bottom Center</option>
+              <option value="bottom-right" data-i18n="pos_bottom_right">Bottom Right</option>
+              <option value="bottom-left" data-i18n="pos_bottom_left">Bottom Left</option>
+              <option value="top-center" data-i18n="pos_top_center">Top Center</option>
+              <option value="top-right" data-i18n="pos_top_right">Top Right</option>
+              <option value="top-left" data-i18n="pos_top_left">Top Left</option>
+            </select>
+          </div>
+
+          <!-- Typography Controls -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="font_label">Font Family:</label>
+              <select id="fontSelect" class="w-full p-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-slate-50">
+                <option value="Helvetica">Helvetica</option>
+                <option value="TimesRoman">Times Roman</option>
+                <option value="Courier">Courier</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="color_label">Text Color:</label>
+              <input type="color" id="numberColorInput" value="#1E2029" class="w-full h-10 p-1 rounded-xl border border-slate-200 cursor-pointer bg-slate-50">
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-xs font-bold text-slate-700" data-i18n="font_size_label">Font Size:</label>
+              <span id="fontSizeText" class="text-xs font-extrabold text-[#22C55E]">11 pt</span>
+            </div>
+            <input type="range" id="fontSizeInput" min="8" max="24" value="11" class="w-full accent-[#22C55E] cursor-pointer">
+          </div>
+
+          <!-- Page Range & Cover Page Options -->
+          <div class="space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1.5" data-i18n="start_page_label">Start Numbering From Page:</label>
+              <input type="number" id="startPageInput" min="1" value="1" class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 bg-white">
+            </div>
+
+            <div class="flex items-center gap-2.5 pt-1">
+              <input type="checkbox" id="skipCoverCheckbox" class="w-4 h-4 rounded text-[#22C55E] focus:ring-emerald-500 cursor-pointer">
+              <label for="skipCoverCheckbox" class="text-xs font-bold text-slate-700 cursor-pointer" data-i18n="skip_cover_label">Skip Cover Page (Don't number page 1)</label>
+            </div>
+          </div>
+
+          <!-- Main CTA Action -->
+          <div class="pt-2">
+            <button onclick="applyPageNumbersAndDownload()" class="w-full py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
+              <i data-lucide="binary" class="w-5 h-5"></i>
+              <span data-i18n="btn_apply">Apply Page Numbers & Download PDF</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Live Canvas Preview Container (7 cols) -->
+        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200 shadow-xl space-y-4 flex flex-col items-center justify-center">
+          <div class="w-full flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="preview_title">Live Page Numbering Preview</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Page 1</span>
+          </div>
+
+          <div class="w-full zero-scroll-preview-container max-h-[62vh] min-h-[280px] flex items-center justify-center bg-slate-100/60 rounded-2xl p-4 overflow-auto border border-slate-200/80 select-none">
+            <canvas id="previewCanvas" class="max-w-full shadow-lg rounded-xl border border-slate-200 bg-white zero-scroll-preview-canvas"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Progress Bar Section -->
+      <div id="progressSection" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-500"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Inserting page numbers into PDF document...</p>
+        </div>
+      </div>
+
+      <!-- Conversion Summary Result Section -->
+      <div id="resultSection" class="hidden max-w-2xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-2xl space-y-8">
+        <div class="text-center space-y-2 border-b border-slate-100 pb-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto font-black">
+            <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900" data-i18n="res_title">Page Numbers Added Successfully</h3>
+          <p id="resFileName" class="text-xs text-slate-400 font-medium">document-numbered.pdf</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" data-i18n="res_filename">Output File</p>
+            <p class="text-sm font-black text-slate-900 truncate">Numbered PDF</p>
+          </div>
+          <div class="p-6 rounded-2xl bg-[#ECFDF5] border border-emerald-200 text-center space-y-1">
+            <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider" data-i18n="res_count">Numbered Pages</p>
+            <p id="resCountText" class="text-2xl font-black text-emerald-600">5 pages</p>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <button id="downloadNumberedBtn" class="flex-1 py-4 px-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm shadow-xl shadow-indigo-500/25 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span data-i18n="btn_download">Download Numbered PDF</span>
+          </button>
+          <button onclick="resetTool()" class="py-4 px-6 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span data-i18n="btn_reset">Number Another PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" data-i18n="seo_how_title">
+            Comment fonctionne la <span class="text-[#22C55E]">Numérotation de Pages PDF</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500" data-i18n="seo_how_sub">
+            Paginez proprement vos rapports, mémoires ou présentations avec des numéros de page clairs et élégants.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step1_title">1. Déposez votre Fichier PDF</h3>
+            <p data-i18n="seo_step1_desc">
+              Sélectionnez le document PDF non paginé. L'application charge l'arborescence des feuillets.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step2_title">2. Configurez le Style & la Position</h3>
+            <p data-i18n="seo_step2_desc">
+              Choisissez le format (ex: "Page X" ou "X / Y"), la position (en bas à droite, centré) et sautez si nécessaire la première page de couverture.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step3_title">3. Application & Téléchargement</h3>
+            <p data-i18n="seo_step3_desc">
+              Téléchargez votre PDF nouvellement paginé en quelques secondes.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900" data-i18n="seo_why_title">Pourquoi Numéroter vos PDF avec SWIF PDF ?</h2>
+          <p data-i18n="seo_why_p1">
+            Imprimer ou relire un dossier de plusieurs dizaines de pages sans numéros de page rend la navigation difficile pour vos destinataires lors de réunions ou de présentations.
+          </p>
+          <p data-i18n="seo_why_p2">
+            **SWIF PDF** ajoute une pagination vectorielle fluide. Le traitement s'effectue **100% dans votre navigateur client**, vous garantissant une vitesse immédiate sans téléverser vos documents confidentiels.
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ ACCORDION ==================== -->
+      <div class="pt-10 border-t border-slate-200/80">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900" data-i18n="faq_title">
+            Foire Aux Questions - <span class="text-[#22C55E]">Numérotation de Pages</span>
+          </h2>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q1">Puis-je masquer la numérotation sur la page de garde ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+              Oui ! Vous pouvez cocher l'option pour ignorer la première page et commencer le comptage à la deuxième page.
+            </div>
+          </div>
+
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q2">Quels formats de numérotation sont disponibles ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+              Vous pouvez choisir entre les chiffres simples (1, 2, 3), le format "Page X sur Y" ou les chiffres romains.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (PDF Paw Style - Harmonized & Internal Cross-Linking) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF en ligne</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner plusieurs PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="tools-seo-i18n.js"></script>
+  <script src="footer-i18n.js"></script>
+  <script src="page-numbers.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

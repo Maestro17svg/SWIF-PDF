@@ -1,0 +1,697 @@
+﻿<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecteur Flipbook 3D PDF Interactif Gratuit | SWIF PDF</title>
+  <meta name="description" content="Transformez vos documents PDF en livres et magazines virtuels 3D avec animation réaliste de tournage de pages. 100% gratuit, interactif et confidentiel.">
+  <meta name="keywords" content="flipbook PDF 3D, lecteur livre virtuel PDF, feuilleter PDF 3D en ligne, magazine interactif PDF, liseur 3D gratuit PDF">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/flipbook.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Lecteur Flipbook 3D PDF Interactif - SWIF PDF">
+  <meta property="og:description" content="Lisez et feuilletez vos PDF comme un véritable livre imprimé avec des effets sonores et des animations 3D immersives dans votre navigateur.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/flipbook.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Lecteur Flipbook 3D SWIF PDF",
+    "url": "https://swifpdf.com/flipbook.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Visualiseur interactif 3D de documents PDF avec animation physique de tournage de page et synthèse sonore sans téléverser sur aucun serveur.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coral: {
+              DEFAULT: '#22C55E',
+              hover: '#16A34A',
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- PDF.js CDN for client-side rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- PDF-Lib CDN for sample PDF generation -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <!-- PageFlip CDN for realistic 3D page flip animation -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* Specific Flipbook 3D Styling */
+    .flipbook-viewport {
+      perspective: 2500px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    .flipbook-container {
+      margin: 0 auto;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    .page-card {
+      background-color: #ffffff;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.04), 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background-size: cover;
+    }
+
+    .page-card canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .page-number-badge {
+      position: absolute;
+      bottom: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.88);
+      padding: 2px 10px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      z-index: 15;
+    }
+
+    .book-spine-shadow {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .spine-left {
+      right: 0;
+      background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.18));
+    }
+    
+    .spine-right {
+      left: 0;
+      background: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,0.18));
+    }
+
+    /* StPageFlip custom 3D overrides */
+    .stf__parent {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+      border-radius: 4px;
+    }
+
+    .stf__item {
+      background-color: #ffffff !important;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Page corner fold hints on hover */
+    .page-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 24px 24px 0;
+      border-color: transparent rgba(0,0,0,0.15) transparent transparent;
+      opacity: 0;
+      transition: opacity 0.25s ease, border-width 0.25s ease;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .page-card:hover::after {
+      opacity: 1;
+      border-width: 0 32px 32px 0;
+    }
+
+    /* Flip hotspot arrows */
+    .flip-hotspot {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 14%;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.25s ease, background 0.25s ease;
+    }
+
+    .flip-hotspot:hover {
+      opacity: 1;
+    }
+
+    .flip-hotspot.left {
+      left: 0;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.4), transparent);
+      border-radius: 16px 0 0 16px;
+    }
+
+    .flip-hotspot.right {
+      right: 0;
+      background: linear-gradient(to left, rgba(0, 0, 0, 0.4), transparent);
+      border-radius: 0 16px 16px 0;
+    }
+
+    /* CSS 3D Fallback Engine animation classes */
+    .css3d-book {
+      position: relative;
+      perspective: 2500px;
+      transform-style: preserve-3d;
+      margin: 0 auto;
+    }
+
+    .css3d-page {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .css3d-page.flipping-next {
+      transform-origin: left center;
+      transform: rotateY(-180deg);
+    }
+
+    .css3d-page.flipping-prev {
+      transform-origin: right center;
+      transform: rotateY(180deg);
+    }
+
+    /* Fullscreen adjustment */
+    :fullscreen .flipbook-stage-wrapper {
+      background: #0f172a;
+      height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    :-webkit-full-screen .flipbook-stage-wrapper {
+      background: #0f172a;
+      height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <!-- ==================== HEADER / NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo Left (SWIF PDF - Brand name strictly preserved) -->
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="book-open" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1" data-i18n="header_sub">Lecteur Flipbook 3D</span>
+        </div>
+      </a>
+
+      <!-- Central Navigation Menu -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Retour à l'accueil</span>
+        </a>
+      </nav>
+
+      <!-- Right Header Controls: Language Selector & Sign In Button -->
+      <div class="flex items-center gap-4">
+        
+        <!-- Language Selector Dropdown -->
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500/20">
+            <span id="currentLangFlag" class="text-base">🇺🇸</span>
+            <span id="currentLangName">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+
+          <!-- Dropdown Menu items -->
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="en">
+              <span class="text-base">🇺🇸</span> English
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="fr">
+              <span class="text-base">🇫🇷</span> Français
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="es">
+              <span class="text-base">🇪🇸</span> Español
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="de">
+              <span class="text-base">🇩🇪</span> Deutsch
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="pt">
+              <span class="text-base">🇵🇹</span> Português
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="it">
+              <span class="text-base">🇮🇹</span> Italiano
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="pl">
+              <span class="text-base">🇵🇱</span> Polski
+            </a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50 font-medium text-slate-700" data-lang="ar">
+              <span class="text-base">🇸🇦</span> العربية (RTL)
+            </a>
+          </div>
+        </div>
+
+        <!-- Blog & Articles Link -->`n        <a href="blog.html" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F0FDF4] border border-[#DCFCE7] text-[#15803D] font-bold text-xs hover:bg-[#DCFCE7] transition-all shadow-sm" data-i18n="nav_blog">`n          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>`n          <span>Blog & Articles</span>`n        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="flex-grow py-8 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      
+      <!-- Page Title & Subtitle -->
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight" data-i18n="hero_title">
+          Lecteur Flipbook <span class="text-[#22C55E]">3D</span> PDF
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto" data-i18n="hero_subtitle">
+          Transformez n'importe quel document PDF en livre ou magazine virtuel interactif avec animation réaliste de tournage de page 3D.
+        </p>
+      </div>
+
+      <!-- ==================== 1. DROPZONE SECTION ==================== -->
+      <div id="dropzoneSection" class="max-w-4xl mx-auto bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl shadow-slate-200/50 text-center space-y-6 transition-all hover:border-[#22C55E]">
+        <input type="file" id="fileInput" accept=".pdf" class="hidden">
+
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto shadow-inner group-hover:scale-105 transition-transform">
+            <i data-lucide="book-open" class="w-10 h-10"></i>
+          </div>
+
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Glissez & déposez votre fichier PDF ici</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">ou</p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button type="button" class="px-8 py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 transition-all active:scale-95 inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Choisir un fichier PDF</span>
+            </button>
+            <button type="button" id="btnSamplePdf" onclick="event.stopPropagation(); loadSamplePdf();" class="px-6 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition-all active:scale-95 inline-flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4 text-[#22C55E]"></i>
+              <span data-i18n="btn_sample">Tester avec un exemple</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100 flex items-center justify-center gap-2" data-i18n="drop_info">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+          <span>Traitement 100% local dans votre navigateur. Aucun document n'est envoyé sur un serveur.</span>
+        </p>
+      </div>
+
+      <!-- ==================== 2. LOADING STATE ==================== -->
+      <div id="loadingSection" class="hidden max-w-xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-4">
+        <div class="w-12 h-12 rounded-full border-4 border-emerald-200 border-t-[#22C55E] animate-spin mx-auto"></div>
+        <h3 class="text-base font-bold text-slate-900" id="loadingText" data-i18n="loading_text">Génération des pages 3D en cours...</h3>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+          <div id="loadingProgress" class="bg-[#22C55E] h-full w-0 transition-all duration-300"></div>
+        </div>
+        <p class="text-xs text-slate-400" id="loadingStatus">Chargement du PDF...</p>
+      </div>
+
+      <!-- ==================== 3. FLIPBOOK VIEWER SECTION ==================== -->
+      <div id="viewerSection" class="hidden space-y-4">
+        
+        <!-- Controls Toolbar Top -->
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-lg flex flex-wrap items-center justify-between gap-3 text-xs">
+          
+          <!-- Left: Back & Filename -->
+          <div class="flex items-center gap-3">
+            <button id="btnChangePdf" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center gap-1.5 transition-colors" title="Changer de PDF">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              <span class="hidden sm:inline" data-i18n="btn_change">Changer</span>
+            </button>
+            <div class="hidden lg:flex items-center gap-2 max-w-[200px] truncate text-slate-600 font-medium">
+              <i data-lucide="file-text" class="w-4 h-4 text-[#22C55E] shrink-0"></i>
+              <span id="pdfFileName" class="truncate">document.pdf</span>
+            </div>
+          </div>
+
+          <!-- Center: Page Navigation Controls -->
+          <div class="flex items-center gap-2 mx-auto sm:mx-0">
+            <button id="btnFirstPage" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Première page">
+              <i data-lucide="chevrons-left" class="w-4 h-4"></i>
+            </button>
+            <button id="btnPrevPage" class="px-3.5 py-2 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold flex items-center gap-1 shadow-sm transition-all active:scale-95" title="Page précédente">
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              <span class="hidden md:inline" data-i18n="btn_prev">Précédent</span>
+            </button>
+
+            <!-- Page Counter Badge -->
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 font-bold text-slate-800">
+              <span data-i18n="page_label">Page</span>
+              <input type="number" id="jumpPageInput" min="1" value="1" class="w-12 text-center bg-white border border-slate-200 rounded-lg p-0.5 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-emerald-500">
+              <span>/</span>
+              <span id="totalPagesBadge">1</span>
+            </div>
+
+            <button id="btnNextPage" class="px-3.5 py-2 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold flex items-center gap-1 shadow-sm transition-all active:scale-95" title="Page suivante">
+              <span class="hidden md:inline" data-i18n="btn_next">Suivant</span>
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+            <button id="btnLastPage" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Dernière page">
+              <i data-lucide="chevrons-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Right: View Controls (Zoom, Sound, Fullscreen) -->
+          <div class="flex items-center gap-1.5">
+            
+            <!-- Zoom out -->
+            <button id="btnZoomOut" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Zoom arrière">
+              <i data-lucide="zoom-out" class="w-4 h-4"></i>
+            </button>
+
+            <span id="zoomLevelBadge" class="hidden sm:inline text-[11px] font-bold text-slate-500 px-1">100%</span>
+
+            <!-- Zoom in -->
+            <button id="btnZoomIn" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Zoom avant">
+              <i data-lucide="zoom-in" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Reset Zoom -->
+            <button id="btnZoomReset" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Réinitialiser zoom">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+
+            <div class="h-4 w-px bg-slate-200 mx-1"></div>
+
+            <!-- Sound toggle -->
+            <button id="btnToggleSound" class="p-2 rounded-xl bg-[#F0FDF4] text-[#22C55E] hover:bg-orange-100 transition-colors" title="Activer/Désactiver son de page">
+              <i data-lucide="volume-2" id="soundIcon" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Auto play / Slideshow -->
+            <button id="btnToggleAutoplay" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Lecture automatique">
+              <i data-lucide="play" id="playIcon" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Fullscreen -->
+            <button id="btnToggleFullscreen" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Plein écran">
+              <i data-lucide="maximize-2" id="fullscreenIcon" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Download -->
+            <button id="btnDownloadPdf" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="Télécharger PDF">
+              <i data-lucide="download" class="w-4 h-4"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- Flipbook Viewing Stage -->
+        <div id="flipbookStageWrapper" class="flipbook-stage-wrapper relative zero-scroll-preview-container max-h-[62vh] min-h-[280px] sm:min-h-[650px] bg-slate-900 rounded-3xl p-4 sm:p-8 flex items-center justify-center overflow-hidden shadow-2xl border border-slate-800">
+          
+          <!-- Background Grid / Glow -->
+          <div class="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:24px_24px] opacity-30 pointer-events-none"></div>
+
+          <!-- Flipbook Hotspot Left -->
+          <div id="hotspotLeft" class="flip-hotspot left">
+            <div class="w-10 h-10 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-sm">
+              <i data-lucide="chevron-left" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <!-- Flipbook Hotspot Right -->
+          <div id="hotspotRight" class="flip-hotspot right">
+            <div class="w-10 h-10 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-sm">
+              <i data-lucide="chevron-right" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <!-- Flipbook Viewport Stage -->
+          <div id="flipbookViewport" class="flipbook-viewport w-full h-full flex items-center justify-center">
+            <div id="flipbookContainer" class="flipbook-container">
+              <!-- Dynamically populated page cards -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Help hint bar -->
+        <div class="flex items-center justify-between text-xs text-slate-400 px-2 font-medium">
+          <span class="flex items-center gap-1">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+            <span data-i18n="hint_flip">Cliquez sur les coins ou utilisez les flèches du clavier (← / →) pour tourner les pages.</span>
+          </span>
+          <span id="orientationBadge" class="hidden sm:inline-block bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">
+            Mode Livre 3D
+          </span>
+        </div>
+
+      </div>
+
+      <!-- ==================== 4. FEATURES HIGHLIGHT ==================== -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
+        
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-extrabold text-slate-900" data-i18n="feat_1_title">Animation 3D Réaliste</h3>
+          <p class="text-xs text-slate-500 leading-relaxed" data-i18n="feat_1_desc">
+            Algorithme de pliage et d'ombrage 3D simulant avec précision le toucher et la courbure d'un livre ou magazine physique.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-[#F0FDF4] text-orange-600 flex items-center justify-center font-bold">
+            <i data-lucide="zap" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-extrabold text-slate-900" data-i18n="feat_2_title">Rendu HD & Traitement Local</h3>
+          <p class="text-xs text-slate-500 leading-relaxed" data-i18n="feat_2_desc">
+            Rendu ultra net vectoriel direct par PDF.js. Tout s'exécute dans votre navigateur sans téléverser vos fichiers sur un serveur distant.
+          </p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">
+            <i data-lucide="smartphone" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-extrabold text-slate-900" data-i18n="feat_3_title">Contrôles Complets & Tactiles</h3>
+          <p class="text-xs text-slate-500 leading-relaxed" data-i18n="feat_3_desc">
+            Geste de glisser tactile sur mobile, mode plein écran, zoom interactif et bruitage réaliste de papier synthétisé.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" data-i18n="seo_how_title">
+            Comment fonctionne le <span class="text-[#22C55E]">Lecteur Flipbook 3D PDF</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500" data-i18n="seo_how_sub">
+            Offrez une expérience de lecture immersive et professionnelle à vos présentations, catalogues et livres numériques.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step1_title">1. Rendu Vectoriel Local</h3>
+            <p data-i18n="seo_step1_desc">
+              Chargez n'importe quel PDF depuis votre appareil. Le moteur PDF.js génère chaque page en haute définition directement dans le canevas de votre navigateur.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-orange-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step2_title">2. Physique 3D & Effets Sonores</h3>
+            <p data-i18n="seo_step2_desc">
+              La technologie StPageFlip simule la pliure physique et l'ombre portée des pages lors du survol ou du clic des coins, accompagnée par un son de froissement de papier synthétisé par la Web Audio API.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900" data-i18n="seo_step3_title">3. Mode Plein Écran & Diaporama</h3>
+            <p data-i18n="seo_step3_desc">
+              Profitez des fonctionnalités avancées : zoom interactif, lecture automatique temporisée et affichage double page pour un confort visuel optimal.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900" data-i18n="seo_why_title">Pourquoi Transformer vos PDF en Flipbook 3D ?</h2>
+          <p data-i18n="seo_why_p1">
+            Les lecteurs PDF traditionnels offrent un défilement vertical monotone peu engageant pour la lecture de magazines, de brochures de vente ou de portfolios créatifs.
+          </p>
+          <p data-i18n="seo_why_p2">
+            Le **Flipbook 3D SWIF PDF** redéfinit l'expérience utilisateur en recréant le plaisir authentique de feuilleter un livre physique imprimé. Conçu sans aucun serveur distant, l'outil s'exécute **100% sur le processeur de votre appareil**, vous assurant une réactivité à 60 FPS et une confidentialité totale de vos documents.
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ ACCORDION ==================== -->
+      <div class="pt-10 border-t border-slate-200/80">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-extrabold text-slate-900" data-i18n="faq_title">
+            Foire Aux Questions - <span class="text-[#22C55E]">Flipbook 3D</span>
+          </h2>
+        </div>
+
+        <div class="space-y-4 max-w-2xl mx-auto">
+          
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q1">Puis-je lire n'importe quel fichier PDF en 3D ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a1">
+              Oui ! Notre convertisseur prend en charge tous les fichiers PDF standard et génère un livre 3D interactif instantanément.
+            </div>
+          </div>
+
+          <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <button class="faq-header w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 text-xs sm:text-sm focus:outline-none">
+              <span data-i18n="faq_q2">Mes documents restent-ils privés ?</span>
+              <i data-lucide="chevron-down" class="faq-icon w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-content px-5 pb-5 text-xs text-slate-600 leading-relaxed hidden" data-i18n="faq_a2">
+              Absolument. Le rendu de votre Flipbook est effectué en mémoire locale. Aucun fichier n'est téléversé vers un serveur distant.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER (PDF Paw Style - Harmonized & Internal Cross-Linking) ==================== -->
+  <footer class="bg-[#1E2029] text-slate-300 pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 bg-[#22C55E] rounded-xl flex items-center justify-center text-white font-bold">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-2xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Outils Principaux</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="flipbook.html" class="hover:text-white transition-colors" data-i18n="footer_nav_flipbook">Lecteur Flipbook 3D PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF en ligne</a></li>
+            <li><a href="merge.html" class="hover:text-white transition-colors" data-i18n="footer_nav_merge">Fusionner plusieurs PDFs</a></li>
+            <li><a href="split.html" class="hover:text-white transition-colors" data-i18n="footer_nav_split">Diviser & Organiser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF électroniquement</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_tools_heading">Conversion & Édition</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="pdf-to-word.html" class="hover:text-white transition-colors" data-i18n="footer_tool_word">Convertir PDF en Word</a></li>
+            <li><a href="pdf-to-jpg.html" class="hover:text-white transition-colors" data-i18n="footer_tool_jpg">Convertir PDF en JPG / PNG</a></li>
+            <li><a href="jpg-to-pdf.html" class="hover:text-white transition-colors" data-i18n="footer_tool_img">Convertir JPG en PDF</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors" data-i18n="footer_tool_ocr">OCR Extraction de texte</a></li>
+            <li><a href="watermark.html" class="hover:text-white transition-colors" data-i18n="footer_tool_watermark">Ajouter un Filigrane PDF</a></li>
+            <li><a href="security.html" class="hover:text-white transition-colors" data-i18n="footer_tool_security">Protéger & Déverrouiller PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-2 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Flipbook Tool Script -->
+  <script src="tools-seo-i18n.js"></script>
+  <script src="footer-i18n.js"></script>
+  <script src="flipbook.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
