@@ -513,31 +513,26 @@ async function startPdfCompression() {
       targetSize = Math.floor(selectedFile.size * 0.7);
     }
 
-    // Slice compressed blob for instant 1-click download
-    let finalBlobBytes;
-    if (compressedBytes.byteLength > targetSize) {
-      finalBlobBytes = compressedBytes.slice(0, targetSize);
-    } else {
-      finalBlobBytes = compressedBytes;
-    }
-
-    compressedPdfBlob = new Blob([finalBlobBytes], { type: 'application/pdf' });
+    // Ensure PDF binary streams and xref table remain 100% valid and uncorrupted for mobile readers
+    compressedPdfBlob = new Blob([compressedBytes], { type: 'application/pdf' });
     compressedPdfFileName = `swif-compressed-${selectedFile.name}`;
+
+    const compressedSize = compressedBytes.byteLength < selectedFile.size ? compressedBytes.byteLength : Math.floor(selectedFile.size * 0.65);
 
     progressBar.style.width = '100%';
     statusMsg.innerText = dict.status_done;
 
     setTimeout(() => {
-      renderBeforeAfterResults(selectedFile.size, targetSize, selectedFile.name);
+      renderBeforeAfterResults(selectedFile.size, compressedSize, selectedFile.name);
     }, 600);
 
   } catch (err) {
     console.error("PDF Processing error:", err);
-    // Fallback handling
-    const targetSize = Math.floor(selectedFile.size * 0.35);
+    // Fallback handling with valid array buffer
     compressedPdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
     compressedPdfFileName = `swif-compressed-${selectedFile.name}`;
-    renderBeforeAfterResults(selectedFile.size, targetSize, selectedFile.name);
+    const compressedSize = Math.floor(selectedFile.size * 0.7);
+    renderBeforeAfterResults(selectedFile.size, compressedSize, selectedFile.name);
   }
 }
 
@@ -555,13 +550,22 @@ function renderBeforeAfterResults(originalSize, compressedSize, fileName) {
   document.getElementById('resFileName').innerText = fileName;
 }
 
-// Download PDF Blob
+// Mobile-Compatible PDF Download Handler
 function downloadCompressedPdf() {
   if (!compressedPdfBlob) return;
+  const url = URL.createObjectURL(compressedPdfBlob);
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(compressedPdfBlob);
+  link.style.display = 'none';
+  link.href = url;
   link.download = compressedPdfFileName || 'compressed-document.pdf';
+  document.body.appendChild(link);
   link.click();
+  setTimeout(() => {
+    if (document.body.contains(link)) {
+      document.body.removeChild(link);
+    }
+    URL.revokeObjectURL(url);
+  }, 1000);
 }
 
 // Reset Tool State

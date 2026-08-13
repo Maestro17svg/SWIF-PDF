@@ -471,19 +471,21 @@ function initRedactionTools() {
     });
   }
 
-  // Draw redaction box via mouse drag on overlay container
+  // Draw redaction box via mouse & touch drag on overlay container
   const overlayContainer = document.getElementById('overlayContainer');
   let tempBox = null;
+  let isTouchDrawing = false;
 
+  // Mouse Down / Drawing
   overlayContainer.addEventListener('mousedown', (e) => {
-    if (e.target !== overlayContainer) return;
+    if (e.target !== overlayContainer && e.target.id !== 'pdfCanvas') return;
     isDrawingBox = true;
     const rect = overlayContainer.getBoundingClientRect();
     drawStartX = e.clientX - rect.left;
     drawStartY = e.clientY - rect.top;
 
     tempBox = document.createElement('div');
-    tempBox.className = "absolute border-2 border-red-500 bg-black/60 pointer-events-none";
+    tempBox.className = "absolute border-2 border-red-500 bg-black/60 pointer-events-none z-30";
     tempBox.style.left = `${drawStartX}px`;
     tempBox.style.top = `${drawStartY}px`;
     tempBox.style.width = '0px';
@@ -511,16 +513,76 @@ function initRedactionTools() {
   overlayContainer.addEventListener('mouseup', () => {
     if (isDrawingBox && tempBox) {
       isDrawingBox = false;
-      const finalW = parseInt(tempBox.style.width);
-      const finalH = parseInt(tempBox.style.height);
-      const finalX = parseInt(tempBox.style.left);
-      const finalY = parseInt(tempBox.style.top);
+      const finalW = parseInt(tempBox.style.width || '0');
+      const finalH = parseInt(tempBox.style.height || '0');
+      const finalX = parseInt(tempBox.style.left || '0');
+      const finalY = parseInt(tempBox.style.top || '0');
 
       tempBox.remove();
       tempBox = null;
 
       if (finalW > 15 && finalH > 10) {
         addRedactionBox(finalX, finalY, finalW, finalH);
+      }
+    }
+  });
+
+  // Touch Start / Drawing for Mobile Smartphones
+  overlayContainer.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 0 && (e.target === overlayContainer || e.target.id === 'pdfCanvas')) {
+      e.preventDefault();
+      isTouchDrawing = true;
+      const touch = e.touches[0];
+      const rect = overlayContainer.getBoundingClientRect();
+      drawStartX = touch.clientX - rect.left;
+      drawStartY = touch.clientY - rect.top;
+
+      tempBox = document.createElement('div');
+      tempBox.className = "absolute border-2 border-red-500 bg-black/70 pointer-events-none z-30";
+      tempBox.style.left = `${drawStartX}px`;
+      tempBox.style.top = `${drawStartY}px`;
+      tempBox.style.width = '0px';
+      tempBox.style.height = '0px';
+      overlayContainer.appendChild(tempBox);
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (isTouchDrawing && tempBox && e.touches && e.touches.length > 0) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = overlayContainer.getBoundingClientRect();
+      const currentX = touch.clientX - rect.left;
+      const currentY = touch.clientY - rect.top;
+
+      const width = Math.abs(currentX - drawStartX);
+      const height = Math.abs(currentY - drawStartY);
+      const left = Math.min(currentX, drawStartX);
+      const top = Math.min(currentY, drawStartY);
+
+      tempBox.style.left = `${left}px`;
+      tempBox.style.top = `${top}px`;
+      tempBox.style.width = `${width}px`;
+      tempBox.style.height = `${height}px`;
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', () => {
+    if (isTouchDrawing && tempBox) {
+      isTouchDrawing = false;
+      const finalW = parseInt(tempBox.style.width || '0');
+      const finalH = parseInt(tempBox.style.height || '0');
+      const finalX = parseInt(tempBox.style.left || '0');
+      const finalY = parseInt(tempBox.style.top || '0');
+
+      tempBox.remove();
+      tempBox = null;
+
+      if (finalW > 15 && finalH > 10) {
+        addRedactionBox(finalX, finalY, finalW, finalH);
+      } else {
+        // If tap without drag on mobile, drop a default redaction box centered on tap
+        addRedactionBox(Math.max(10, drawStartX - 80), Math.max(10, drawStartY - 20), 160, 40);
       }
     }
   });
@@ -553,18 +615,19 @@ function refreshVisibleRedactions() {
   pageRedactions.forEach(red => {
     const div = document.createElement('div');
     div.id = red.id;
-    div.className = "absolute group cursor-move border-2 border-red-500 rounded p-0.5 shadow-md select-none";
+    div.className = "absolute group cursor-move border-2 border-red-500 rounded p-0.5 shadow-md select-none z-20";
     div.style.left = `${red.x}px`;
     div.style.top = `${red.y}px`;
     div.style.width = `${red.width}px`;
     div.style.height = `${red.height}px`;
     div.style.backgroundColor = red.color || '#000000';
+    div.style.touchAction = 'none';
 
     div.innerHTML = `
-      <button onclick="removeRedaction('${red.id}')" class="absolute -top-3 -right-3 w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs shadow-md hover:bg-red-700">
+      <button onclick="removeRedaction('${red.id}')" class="absolute -top-3.5 -right-3.5 w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs shadow-lg hover:bg-red-700">
         &times;
       </button>
-      <div class="resize-handle absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 bg-red-600 rounded-full cursor-se-resize shadow-md"></div>
+      <div class="resize-handle absolute -bottom-2 -right-2 w-4.5 h-4.5 bg-red-600 rounded-full cursor-se-resize shadow-lg border-2 border-white"></div>
     `;
 
     makeDraggableAndResizable(div, red);
@@ -593,48 +656,55 @@ function makeDraggableAndResizable(element, redObj) {
   let startX, startY, startW, startH, startLeft, startTop;
 
   const handle = element.querySelector('.resize-handle');
+  if (handle) handle.style.touchAction = 'none';
 
   element.addEventListener('mousedown', (e) => {
     if (e.target === handle) return;
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
-    startLeft = parseInt(element.style.left || '0');
-    startTop = parseInt(element.style.top || '0');
+    startLeft = parseInt(element.style.left || '0', 10);
+    startTop = parseInt(element.style.top || '0', 10);
     e.stopPropagation();
   });
 
-  handle.addEventListener('mousedown', (e) => {
-    isResizing = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    startW = element.offsetWidth;
-    startH = element.offsetHeight;
-    e.stopPropagation();
-  });
+  if (handle) {
+    handle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startW = element.offsetWidth;
+      startH = element.offsetHeight;
+      e.stopPropagation();
+    });
+  }
 
   element.addEventListener('touchstart', (e) => {
     if (e.target === handle) return;
     if (e.touches && e.touches.length > 0) {
+      e.preventDefault();
+      e.stopPropagation();
       isDragging = true;
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-      startLeft = parseInt(element.style.left || '0');
-      startTop = parseInt(element.style.top || '0');
-      e.stopPropagation();
+      startLeft = parseInt(element.style.left || '0', 10);
+      startTop = parseInt(element.style.top || '0', 10);
     }
   }, { passive: false });
 
-  handle.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      isResizing = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      startW = element.offsetWidth;
-      startH = element.offsetHeight;
-      e.stopPropagation();
-    }
-  }, { passive: false });
+  if (handle) {
+    handle.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        isResizing = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        startW = element.offsetWidth;
+        startH = element.offsetHeight;
+      }
+    }, { passive: false });
+  }
 
   document.addEventListener('mousemove', (e) => {
     if (isDragging) {
@@ -658,7 +728,38 @@ function makeDraggableAndResizable(element, redObj) {
     }
   });
 
+  document.addEventListener('touchmove', (e) => {
+    if ((isDragging || isResizing) && e.touches && e.touches.length > 0) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      if (isDragging) {
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+        const newLeft = Math.max(0, startLeft + dx);
+        const newTop = Math.max(0, startTop + dy);
+        element.style.left = `${newLeft}px`;
+        element.style.top = `${newTop}px`;
+        redObj.x = newLeft;
+        redObj.y = newTop;
+      } else if (isResizing) {
+        const dw = touch.clientX - startX;
+        const dh = touch.clientY - startY;
+        const newW = Math.max(20, startW + dw);
+        const newH = Math.max(15, startH + dh);
+        element.style.width = `${newW}px`;
+        element.style.height = `${newH}px`;
+        redObj.width = newW;
+        redObj.height = newH;
+      }
+    }
+  }, { passive: false });
+
   document.addEventListener('mouseup', () => {
+    isDragging = false;
+    isResizing = false;
+  });
+
+  document.addEventListener('touchend', () => {
     isDragging = false;
     isResizing = false;
   });

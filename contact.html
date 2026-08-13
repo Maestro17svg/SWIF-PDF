@@ -102,14 +102,49 @@
               <span class="text-base">🇸🇦</span> العربية (RTL)
             </a>
           </div>
-        </div>
+        <!-- Mobile Hamburger Menu Button (3 traits) -->
+        <button id="mobileMenuBtn" type="button" aria-label="Toggle Navigation Menu" class="md:hidden inline-flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30">
+          <i data-lucide="menu" id="mobileMenuIcon" class="w-6 h-6"></i>
+        </button>
 
-        <a href="index.html#tools-section" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition-all active:scale-95">
-          <span>Outils Gratuits</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-        </a>
       </div>
 
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden mobile-nav-drawer border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-1.5 shadow-xl">
+      <a href="index.html#tools-section" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all" data-i18n="nav_tools">
+        <i data-lucide="grid" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>PDF Tools</span>
+      </a>
+      <a href="compress.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all" data-i18n="nav_compress">
+        <i data-lucide="minimize-2" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Compress</span>
+      </a>
+      <a href="convert.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="file-input" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Convert</span>
+      </a>
+      <a href="sign.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all" data-i18n="nav_sign">
+        <i data-lucide="pen-tool" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Sign & Edit</span>
+      </a>
+      <a href="blog.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all" data-i18n="nav_blog">
+        <i data-lucide="book-open" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Blog & Articles</span>
+      </a>
+      <a href="index.html#faq-section" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="help-circle" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>FAQ</span>
+      </a>
+      <a href="contact.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all" data-i18n="footer_legal_contact">
+        <i data-lucide="mail" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Contact</span>
+      </a>
+      <a href="index.html#benefits-section" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all" data-i18n="nav_about">
+        <i data-lucide="info" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>About</span>
+      </a>
     </div>
   </header>
 

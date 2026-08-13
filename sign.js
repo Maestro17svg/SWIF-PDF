@@ -733,18 +733,19 @@ function refreshVisibleOverlays() {
   pageOverlays.forEach(ov => {
     const div = document.createElement('div');
     div.id = ov.id;
-    div.className = "absolute group cursor-move border-2 border-dashed border-orange-400 rounded-lg p-1 bg-white/40 backdrop-blur-[2px] shadow-lg select-none";
+    div.className = "absolute group cursor-move border-2 border-dashed border-orange-400 rounded-lg p-1 bg-white/40 backdrop-blur-[2px] shadow-lg select-none z-20";
     div.style.left = `${ov.x}px`;
     div.style.top = `${ov.y}px`;
     div.style.width = `${ov.width}px`;
     div.style.height = `${ov.height}px`;
+    div.style.touchAction = 'none';
 
     div.innerHTML = `
       <img src="${ov.dataUrl}" class="w-full h-full object-contain pointer-events-none" />
-      <button onclick="removeOverlay('${ov.id}')" class="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs shadow-md hover:bg-red-700">
+      <button onclick="removeOverlay('${ov.id}')" class="absolute -top-3.5 -right-3.5 w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs shadow-md hover:bg-red-700">
         &times;
       </button>
-      <div class="resize-handle absolute -bottom-2 -right-2 w-4 h-4 bg-orange-600 rounded-full cursor-se-resize shadow-md"></div>
+      <div class="resize-handle absolute -bottom-2.5 -right-2.5 w-5 h-5 bg-orange-600 rounded-full cursor-se-resize shadow-md border-2 border-white"></div>
     `;
 
     makeDraggableAndResizable(div, ov);
@@ -763,6 +764,7 @@ function makeDraggableAndResizable(element, ovObj) {
   let startX, startY, startW, startH, startLeft, startTop;
 
   const handle = element.querySelector('.resize-handle');
+  if (handle) handle.style.touchAction = 'none';
 
   // Mouse Handlers
   element.addEventListener('mousedown', (e) => {
@@ -770,43 +772,49 @@ function makeDraggableAndResizable(element, ovObj) {
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
-    startLeft = parseInt(element.style.left || '0');
-    startTop = parseInt(element.style.top || '0');
+    startLeft = parseInt(element.style.left || '0', 10);
+    startTop = parseInt(element.style.top || '0', 10);
     e.stopPropagation();
   });
 
-  handle.addEventListener('mousedown', (e) => {
-    isResizing = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    startW = element.offsetWidth;
-    startH = element.offsetHeight;
-    e.stopPropagation();
-  });
+  if (handle) {
+    handle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startW = element.offsetWidth;
+      startH = element.offsetHeight;
+      e.stopPropagation();
+    });
+  }
 
   // Touch Handlers for Mobile Devices
   element.addEventListener('touchstart', (e) => {
     if (e.target === handle) return;
     if (e.touches && e.touches.length > 0) {
+      e.preventDefault();
+      e.stopPropagation();
       isDragging = true;
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-      startLeft = parseInt(element.style.left || '0');
-      startTop = parseInt(element.style.top || '0');
-      e.stopPropagation();
+      startLeft = parseInt(element.style.left || '0', 10);
+      startTop = parseInt(element.style.top || '0', 10);
     }
   }, { passive: false });
 
-  handle.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      isResizing = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      startW = element.offsetWidth;
-      startH = element.offsetHeight;
-      e.stopPropagation();
-    }
-  }, { passive: false });
+  if (handle) {
+    handle.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        isResizing = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        startW = element.offsetWidth;
+        startH = element.offsetHeight;
+      }
+    }, { passive: false });
+  }
 
   document.addEventListener('mousemove', (e) => {
     if (isDragging) {
@@ -832,6 +840,7 @@ function makeDraggableAndResizable(element, ovObj) {
 
   document.addEventListener('touchmove', (e) => {
     if ((isDragging || isResizing) && e.touches && e.touches.length > 0) {
+      e.preventDefault();
       const touch = e.touches[0];
       if (isDragging) {
         const dx = touch.clientX - startX;
@@ -861,6 +870,11 @@ function makeDraggableAndResizable(element, ovObj) {
   });
 
   document.addEventListener('touchend', () => {
+    isDragging = false;
+    isResizing = false;
+  });
+
+  document.addEventListener('touchcancel', () => {
     isDragging = false;
     isResizing = false;
   });

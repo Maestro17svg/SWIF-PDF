@@ -122,10 +122,37 @@ body {
   justify-content: center;
 }
 
-.zero-scroll-preview-canvas {
-  max-height: calc(65vh - 100px) !important;
-  max-width: 100% !important;
-  width: auto !important;
-  object-fit: contain !important;
+
+/* Modern Off-White Tool Cards Grid */
+.tool-card-modern {
+  background-color: #f8fafc; /* fond gris très clair / blanc cassé */
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.06), 0 1px 3px -1px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.tool-card-modern:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -5px rgba(34, 197, 94, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+/* Mobile Hamburger Navigation Menu Drawer */
+.mobile-nav-drawer {
+  animation: slideDownMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDownMobile {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
