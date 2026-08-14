@@ -741,6 +741,9 @@ function updateLivePreview() {
   
   canvas.width = previewMaxW;
   canvas.height = Math.round(previewMaxW * aspectRatio);
+  canvas.style.maxHeight = '100vh';
+  canvas.style.objectFit = 'contain';
+  canvas.style.maxWidth = '100%';
 
   const w = canvas.width;
   const h = canvas.height;

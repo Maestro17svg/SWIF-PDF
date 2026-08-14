@@ -1393,30 +1393,30 @@ window.toolsSeo = {
 
   ocr: {
     en: {
-      seo_how_title: "How Does <span class='text-[#22C55E]'>OCR Text Extraction</span> Work?",
-      seo_how_sub: "Instantly extract and copy printed or scanned text inside image-based PDF documents.",
-      seo_step1_title: "1. Upload Scanned PDF",
-      seo_step1_desc: "Import your scanned document. The tool loads Tesseract.js engine inside your browser.",
-      seo_step2_title: "2. OCR Intelligence Parsing",
-      seo_step2_desc: "Optical recognition parses glyphs, words, and text lines even on low-quality scans.",
-      seo_step3_title: "3. Copy & Export Text",
-      seo_step3_desc: "Copy extracted text to your clipboard in 1 click or download as a raw text (.txt) file.",
-      seo_why_title: "Why Use PDF OCR with SWIF PDF?",
-      seo_why_p1: "Scanned paper documents do not allow text search or copying. Re-typing manually wastes time.",
-      seo_why_p2: "<strong>SWIF PDF</strong> runs Tesseract.js <strong>100% locally in your browser</strong> without uploading images."
+      seo_how_title: "How Does <span class='text-[#22C55E]'>Free OCR & Image Text Extraction</span> Work?",
+      seo_how_sub: "Instantly extract text from images (PNG, JPG) and scanned PDF documents with free local browser OCR.",
+      seo_step1_title: "1. Upload Image (PNG/JPG) or PDF",
+      seo_step1_desc: "Import your scanned PDF document, document photo, or image file. The tool loads Tesseract.js OCR engine inside your browser.",
+      seo_step2_title: "2. Optical Character Recognition (OCR)",
+      seo_step2_desc: "Optical recognition parses glyphs, words, and text lines even on low-quality scans and mobile photos.",
+      seo_step3_title: "3. Copy & Convert Image to Text",
+      seo_step3_desc: "Copy extracted text to your clipboard in 1 click or download as a raw text (.txt) or Word (.doc) file.",
+      seo_why_title: "Why Use Free OCR Image & PDF Text Extraction with SWIF PDF?",
+      seo_why_p1: "Scanned paper documents and document photos do not allow text searching or copying. Manually re-typing text from PNG/JPG images wastes valuable time.",
+      seo_why_p2: "<strong>SWIF PDF</strong> provides <strong>free OCR to convert image to text</strong> running Tesseract.js <strong>100% locally in your browser</strong> without uploading your images to any server."
     },
     fr: {
-      seo_how_title: "Comment fonctionne la <span class='text-[#22C55E]'>Reconnaissance Optique de Caractères (OCR)</span> ?",
-      seo_how_sub: "Extrayez et copiez instantanément le texte imprimé ou numérisé au sein de vos documents PDF scannés.",
-      seo_step1_title: "1. Déposez le PDF Numérisé",
-      seo_step1_desc: "Importez votre document scanné ou votre photo de document. L'outil charge la bibliothèque Tesseract.js dans votre navigateur.",
-      seo_step2_title: "2. Analyse par Intelligence OCR",
-      seo_step2_desc: "Le moteur d'intelligence optique détecte les glyphes, les mots et les lignes de texte même sur des numérisations imparfaites.",
-      seo_step3_title: "3. Copie & Export du Texte",
-      seo_step3_desc: "Copiez en 1-clic le texte extrait dans votre presse-papiers ou téléchargez-le sous forme de fichier texte brut (.txt).",
-      seo_why_title: "Pourquoi Utiliser l'OCR PDF avec SWIF PDF ?",
-      seo_why_p1: "Les documents scannés au scanner ou photographiés avec un téléphone ne permettent pas de rechercher des mots ni de copier-coller du texte. Devoir tout ressaisir à la main représente une perte de temps immense.",
-      seo_why_p2: "<strong>SWIF PDF</strong> intègre le moteur open-source Tesseract.js exécuté <strong>100% dans votre navigateur</strong>. Vos documents personnels sont analysés en local."
+      seo_how_title: "Comment fonctionne l'<span class='text-[#22C55E]'>OCR Gratuit pour Extraire le Texte d'une Image & PDF</span> ?",
+      seo_how_sub: "Extrayez et copiez instantanément le texte d'une image (PNG, JPG) ou d'un document PDF scanné grâce à notre outil d'OCR gratuit et 100% local.",
+      seo_step1_title: "1. Déposez l'Image (PNG/JPG) ou le PDF",
+      seo_step1_desc: "Importez votre photo de document, image PNG/JPG ou PDF scanné. L'outil charge la technologie OCR Tesseract.js directement dans votre navigateur.",
+      seo_step2_title: "2. Convertir Image en Texte par Intelligence OCR",
+      seo_step2_desc: "Le moteur d'intelligence optique détecte les glyphes, les mots et les lignes de texte même sur des photos mobiles ou des numérisations imparfaites.",
+      seo_step3_title: "3. Copie & Export du Texte Extrait",
+      seo_step3_desc: "Copiez en 1-clic le texte extrait d'une image dans votre presse-papiers ou téléchargez-le sous forme de fichier Texte (.txt) ou Word (.doc).",
+      seo_why_title: "Pourquoi Utiliser l'OCR Gratuit pour Extraire le Texte d'une Image avec SWIF PDF ?",
+      seo_why_p1: "Les photos de documents (JPG, PNG) et les fichiers scannés au scanner ne permettent pas de rechercher des mots ni de copier du texte. Devoir tout retranscrire à la main représente une perte de temps immense.",
+      seo_why_p2: "<strong>SWIF PDF</strong> est la solution idéale pour <strong>convertir une image en texte</strong> et exécuter un <strong>OCR gratuit 100% dans votre navigateur client</strong>. Vos images et pièces d'identité confidentielles restent totalement privées."
     },
     es: {
       seo_how_title: "¿Cómo Funciona la <span class='text-[#22C55E]'>Extracción de Texto OCR</span>?",

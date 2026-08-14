@@ -352,6 +352,9 @@ let pdfDocObj = null;
 let totalPagesCount = 0;
 let extractedFullText = "";
 
+let loadedFileType = 'pdf'; // 'pdf' or 'image'
+let imageFile = null;
+
 document.addEventListener('DOMContentLoaded', () => {
   initLanguageSwitcher();
   switchLanguage(currentLang);
@@ -432,26 +435,46 @@ function initDropzone() {
     });
   });
   dropzone.addEventListener('drop', (e) => {
-    if (e.dataTransfer.files.length > 0) loadPdfFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files.length > 0) loadInputFile(e.dataTransfer.files[0]);
   });
   fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) loadPdfFile(e.target.files[0]);
+    if (e.target.files.length > 0) loadInputFile(e.target.files[0]);
   });
 }
 
-async function loadPdfFile(file) {
-  if (window.validatePdfFile) {
-    const val = window.validatePdfFile(file);
-    if (!val.valid) {
-      if (window.showGlobalErrorToast) window.showGlobalErrorToast(val.error);
-      else alert(val.error);
-      return;
-    }
-  } else if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
-    alert("Veuillez sélectionner un fichier PDF valide (.pdf).");
+async function loadInputFile(file) {
+  if (!file) return;
+  const filename = file.name.toLowerCase();
+  const isImage = file.type.startsWith('image/') || /\.(png|jpg|jpeg|webp|bmp)$/.test(filename);
+  const isPdf = filename.endsWith('.pdf');
+
+  if (!isImage && !isPdf) {
+    alert("Veuillez sélectionner un fichier PDF ou une Image valide (.pdf, .png, .jpg, .jpeg, .webp).");
     return;
   }
+
   pdfFile = file;
+
+  if (isImage) {
+    loadedFileType = 'image';
+    imageFile = file;
+    pdfDocObj = null;
+
+    document.getElementById('dropzoneSection').classList.add('hidden');
+    document.getElementById('editorSection').classList.remove('hidden');
+
+    const pageRangeContainer = document.getElementById('pageRangeSelect')?.parentElement;
+    if (pageRangeContainer) pageRangeContainer.classList.add('hidden');
+
+    document.getElementById('docPagesInfoText').innerText = `${file.name} (Image PNG/JPG)`;
+    return;
+  }
+
+  // Handle PDF file
+  loadedFileType = 'pdf';
+  imageFile = null;
+  const pageRangeContainer = document.getElementById('pageRangeSelect')?.parentElement;
+  if (pageRangeContainer) pageRangeContainer.classList.remove('hidden');
 
   try {
     const ab = await file.arrayBuffer();
@@ -501,16 +524,8 @@ function parseTargetPages() {
   return Array.from(pagesSet).sort((a, b) => a - b);
 }
 
-/* ==================== CLIENT-SIDE PDF OCR EXTRACTION ENGINE ==================== */
+/* ==================== CLIENT-SIDE OCR EXTRACTION ENGINE (PDF & IMAGE) ==================== */
 async function processOcrTextExtraction() {
-  if (!pdfDocObj) return;
-
-  const targetPages = parseTargetPages();
-  if (targetPages.length === 0) {
-    alert("Invalid page range specified.");
-    return;
-  }
-
   const selectedOcrLang = document.getElementById('ocrLangSelect').value || 'fra';
 
   document.getElementById('editorSection').classList.add('hidden');
@@ -520,38 +535,54 @@ async function processOcrTextExtraction() {
   const statusMsg = document.getElementById('statusMsg');
   const dict = translations[currentLang];
 
-  progressBar.style.width = '10%';
-  statusMsg.innerText = dict.status_loading_pdf;
+  progressBar.style.width = '15%';
+  statusMsg.innerText = dict.status_processing_ocr;
 
   let combinedTextResult = "";
   let worker = null;
 
   try {
-    // 1. Try extracting native text layer first for selected pages
-    for (let idx = 0; idx < targetPages.length; idx++) {
-      const pageNum = targetPages[idx];
-      const page = await pdfDocObj.getPage(pageNum);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map(item => item.str).join(' ').trim();
-
-      if (pageText.length > 20) {
-        combinedTextResult += `--- Page ${pageNum} ---\n${pageText}\n\n`;
+    // 1. Image OCR Execution
+    if (loadedFileType === 'image' && imageFile) {
+      if (window.Tesseract) {
+        progressBar.style.width = '40%';
+        worker = await Tesseract.createWorker(selectedOcrLang);
+        
+        progressBar.style.width = '70%';
+        const { data } = await worker.recognize(imageFile);
+        if (data && data.text) {
+          combinedTextResult = data.text.trim();
+        }
+        await worker.terminate();
       }
     }
+    // 2. PDF OCR Execution
+    else if (pdfDocObj) {
+      const targetPages = parseTargetPages();
+      
+      // Native text extraction attempt
+      for (let idx = 0; idx < targetPages.length; idx++) {
+        const pageNum = targetPages[idx];
+        const page = await pdfDocObj.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(' ').trim();
 
-    // 2. If native text layer was sparse (e.g. scanned image PDF), run Tesseract.js OCR engine
-    if (combinedTextResult.trim().length < 50) {
-      statusMsg.innerText = dict.status_processing_ocr;
-      progressBar.style.width = '25%';
+        if (pageText.length > 20) {
+          combinedTextResult += `--- Page ${pageNum} ---\n${pageText}\n\n`;
+        }
+      }
 
-      if (window.Tesseract) {
+      // If native text layer was sparse (scanned PDF), run Tesseract.js OCR
+      if (combinedTextResult.trim().length < 50 && window.Tesseract) {
+        statusMsg.innerText = dict.status_processing_ocr;
+        progressBar.style.width = '25%';
+
         worker = await Tesseract.createWorker(selectedOcrLang);
 
         for (let idx = 0; idx < targetPages.length; idx++) {
           const pageNum = targetPages[idx];
           const page = await pdfDocObj.getPage(pageNum);
           
-          // Render page to high-res canvas for OCR
           const viewport = page.getViewport({ scale: 2.0 });
           const canvas = document.createElement('canvas');
           canvas.width = viewport.width;
@@ -588,7 +619,7 @@ async function processOcrTextExtraction() {
   } catch (err) {
     console.error("Error during OCR text extraction:", err);
     if (worker) await worker.terminate().catch(() => {});
-    alert(`An error occurred during OCR text extraction: ${err.message || err}`);
+    alert(`Une erreur est survenue lors de l'OCR : ${err.message || err}`);
     resetTool();
   }
 }

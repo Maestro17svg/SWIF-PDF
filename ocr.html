@@ -1,17 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OCR PDF Gratuit - Reconnaissance Optique de Caractères | SWIF PDF</title>
-  <meta name="description" content="Convertissez vos documents scannés et images PDF en texte éditable et copiable grâce à l'OCR Tesseract.js 100% local et sécurisé.">
-  <meta name="keywords" content="OCR PDF gratuit, reconnaissance caractères PDF, extraire texte PDF scanné, OCR en ligne rapide, Tesseract PDF local">
+  <title>OCR Gratuit - Extraire texte d'image (PNG/JPG) & PDF | Convertir image en texte</title>
+  <meta name="description" content="Extraire le texte d'une image (PNG, JPG) ou d'un PDF scanné gratuitement avec notre outil d'OCR 100% local. Convertir image en texte de façon rapide et sécurisée sans aucun serveur.">
+  <meta name="keywords" content="extraire texte d'image, OCR gratuit, convertir image en texte, OCR PDF gratuit, extraire texte JPG PNG, reconnaitre texte photo, Tesseract OCR local">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://swifpdf.com/ocr.html">
 
   <!-- OpenGraph Metadata -->
-  <meta property="og:title" content="OCR PDF Gratuit - Extraction de Texte - SWIF PDF">
-  <meta property="og:description" content="Numérisez et extrayez le texte de vos PDF scannés directement dans votre navigateur grâce à la technologie OCR.">
+  <meta property="og:title" content="OCR Gratuit - Extraire texte d'image (PNG/JPG) & PDF - SWIF PDF">
+  <meta property="og:description" content="Convertir image en texte et extraire le texte d'un PDF scanné ou d'une photo (JPG/PNG) 100% localement dans votre navigateur.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://swifpdf.com/ocr.html">
 
@@ -20,11 +20,11 @@
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Outil OCR PDF SWIF PDF",
+    "name": "Outil OCR Gratuit SWIF PDF - Extraire texte d'image & PDF",
     "url": "https://swifpdf.com/ocr.html",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "All",
-    "description": "Outil de reconnaissance optique de caractères (OCR) permettant d'extraire le texte des PDF scannés localement via Tesseract.js.",
+    "description": "Outil gratuit de reconnaissance optique de caractères (OCR) permettant d'extraire le texte d'une image (PNG/JPG) ou d'un PDF scanné localement via Tesseract.js.",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -60,7 +60,7 @@
         </div>
         <div class="flex flex-col">
           <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
-          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">OCR Text Extract</span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1">OCR Image & PDF</span>
         </div>
       </a>
 
@@ -100,28 +100,28 @@
       
       <div class="text-center space-y-3">
         <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
-          Extract Text & <span class="text-[#22C55E]">OCR</span> PDF
+          OCR Gratuit &ndash; Extraire Texte d'Image (PNG/JPG) & PDF
         </h1>
         <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto" data-i18n="hero_subtitle">
-          Convert scanned PDFs and documents into editable, searchable text directly in your browser.
+          Convertir image en texte et extraire le texte des PDF scannés et photos directement dans votre navigateur.
         </p>
       </div>
 
       <!-- Dropzone Section -->
       <div id="dropzoneSection" class="max-w-3xl mx-auto bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 hover:border-[#22C55E] transition-all">
-        <input type="file" id="fileInput" accept=".pdf" class="hidden">
+        <input type="file" id="fileInput" accept=".pdf, .png, .jpg, .jpeg, .webp, .bmp, image/*" class="hidden">
         <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="cursor-pointer space-y-5">
           <div class="w-20 h-20 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto shadow-inner">
             <i data-lucide="file-search" class="w-10 h-10"></i>
           </div>
           <div class="space-y-1">
-            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Drag & drop your PDF file here</h3>
-            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">or</p>
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Glissez & déposez votre fichier PDF ou Image (PNG, JPG) ici</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">ou</p>
           </div>
           <div>
             <button type="button" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-black text-sm shadow-lg shadow-slate-800/25 inline-flex items-center gap-2">
               <i data-lucide="upload" class="w-4 h-4"></i>
-              <span data-i18n="drop_btn">Select PDF File for OCR Text Extraction</span>
+              <span data-i18n="drop_btn">Sélectionner une Image ou un PDF à analyser (OCR)</span>
             </button>
           </div>
         </div>

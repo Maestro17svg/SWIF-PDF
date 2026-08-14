@@ -457,7 +457,7 @@ function initCompressionLevels() {
   });
 }
 
-// Client-Side PDF Compression Processor
+// High-Efficiency Aggressive PDF Compression Processor
 async function startPdfCompression() {
   if (!selectedFile) return;
 
@@ -471,68 +471,118 @@ async function startPdfCompression() {
   const statusMsg = document.getElementById('statusMsg');
   const dict = translations[currentLang];
 
-  progressBar.style.width = '15%';
+  progressBar.style.width = '10%';
   statusMsg.innerText = dict.status_analyzing;
+
+  // Quality & Scale settings based on selected level
+  let jpegQuality = 0.55;
+  let renderScale = 1.25;
+
+  if (levelRadio === 'extreme') {
+    jpegQuality = 0.35;
+    renderScale = 1.00;
+  } else if (levelRadio === 'low') {
+    jpegQuality = 0.72;
+    renderScale = 1.50;
+  }
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    
-    progressBar.style.width = '45%';
-    statusMsg.innerText = dict.status_compressing;
+    const originalBytesLength = arrayBuffer.byteLength;
 
-    let compressedBytes;
+    let compressedBytes = null;
+    let totalPages = 1;
 
-    // Use PDF-Lib if available for object streams optimization
+    // Strategy 1: Page-by-page Canvas rendering & JPEG stream re-compression via PDF.js + PDF-Lib
+    if (window.pdfjsLib && window.PDFLib) {
+      try {
+        const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer.slice(0)) });
+        const pdfDocObj = await loadingTask.promise;
+        totalPages = pdfDocObj.numPages;
+        document.getElementById('resPageCount').innerText = totalPages;
+
+        const { PDFDocument } = PDFLib;
+        const newPdfDoc = await PDFDocument.create();
+
+        for (let i = 1; i <= totalPages; i++) {
+          const progressPercent = Math.round(15 + (i / totalPages) * 70);
+          progressBar.style.width = `${progressPercent}%`;
+          statusMsg.innerText = `${dict.status_compressing} (${i}/${totalPages})`;
+
+          const page = await pdfDocObj.getPage(i);
+          const unscaledViewport = page.getViewport({ scale: 1.0 });
+          const viewport = page.getViewport({ scale: renderScale });
+
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+          const ctx = canvas.getContext('2d');
+
+          await page.render({ canvasContext: ctx, viewport }).promise;
+
+          // Convert canvas to compressed JPEG blob bytes
+          const jpegDataUrl = canvas.toDataURL('image/jpeg', jpegQuality);
+          const base64Data = jpegDataUrl.split(',')[1];
+          const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+
+          const embeddedJpg = await newPdfDoc.embedJpg(imageBytes);
+
+          const newPage = newPdfDoc.addPage([unscaledViewport.width, unscaledViewport.height]);
+          newPage.drawImage(embeddedJpg, {
+            x: 0,
+            y: 0,
+            width: unscaledViewport.width,
+            height: unscaledViewport.height
+          });
+        }
+
+        compressedBytes = await newPdfDoc.save({
+          useObjectStreams: true,
+          addDefaultPage: false
+        });
+
+      } catch (renderingErr) {
+        console.warn("Raster stream re-encoding skipped:", renderingErr);
+      }
+    }
+
+    // Strategy 2: PDF-Lib Object Streams optimization
     if (window.PDFLib) {
       const { PDFDocument } = PDFLib;
       const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-      
-      // Compute page count
-      const pageCount = pdfDoc.getPageCount();
-      document.getElementById('resPageCount').innerText = pageCount;
+      document.getElementById('resPageCount').innerText = pdfDoc.getPageCount();
 
-      // Object streams compression
-      compressedBytes = await pdfDoc.save({
+      const structBytes = await pdfDoc.save({
         useObjectStreams: true,
         addDefaultPage: false,
         updateFieldAppearances: false
       });
-    } else {
-      // Fallback byte array optimization
+
+      // Compare compressedBytes (Strategy 1) vs structBytes (Strategy 2) vs originalBytesLength
+      if (!compressedBytes || (structBytes.byteLength < compressedBytes.byteLength && structBytes.byteLength < originalBytesLength)) {
+        compressedBytes = structBytes;
+      }
+    }
+
+    if (!compressedBytes) {
       compressedBytes = new Uint8Array(arrayBuffer);
     }
 
-    // Apply ratio factor based on level for simulation fidelity
-    let factor = 0.35; // Recommended ~65% saved
-    if (levelRadio === 'extreme') factor = 0.22; // ~78% saved
-    if (levelRadio === 'low') factor = 0.62; // ~38% saved
-
-    // Produce realistic compressed size
-    let targetSize = Math.floor(selectedFile.size * factor);
-    if (targetSize >= selectedFile.size) {
-      targetSize = Math.floor(selectedFile.size * 0.7);
-    }
-
-    // Ensure PDF binary streams and xref table remain 100% valid and uncorrupted for mobile readers
     compressedPdfBlob = new Blob([compressedBytes], { type: 'application/pdf' });
     compressedPdfFileName = `swif-compressed-${selectedFile.name}`;
-
-    const compressedSize = compressedBytes.byteLength < selectedFile.size ? compressedBytes.byteLength : Math.floor(selectedFile.size * 0.65);
 
     progressBar.style.width = '100%';
     statusMsg.innerText = dict.status_done;
 
     setTimeout(() => {
-      renderBeforeAfterResults(selectedFile.size, compressedSize, selectedFile.name);
-    }, 600);
+      renderBeforeAfterResults(originalBytesLength, compressedBytes.byteLength, selectedFile.name);
+    }, 500);
 
   } catch (err) {
     console.error("PDF Processing error:", err);
-    // Fallback handling with valid array buffer
     compressedPdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
     compressedPdfFileName = `swif-compressed-${selectedFile.name}`;
-    const compressedSize = Math.floor(selectedFile.size * 0.7);
-    renderBeforeAfterResults(selectedFile.size, compressedSize, selectedFile.name);
+    renderBeforeAfterResults(selectedFile.size, selectedFile.size, selectedFile.name);
   }
 }
 

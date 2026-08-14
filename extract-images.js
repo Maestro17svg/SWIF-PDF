@@ -16,6 +16,7 @@ const translations = {
     btn_download_direct: "Download {count} Images Directly",
     btn_download_zip: "Download {count} Images (.ZIP)",
     status_extracting: "Scanning PDF and extracting embedded images...",
+    status_extracting_progress: "Extracting images... Page {current}/{total} ({count} images found)",
     status_downloading_direct: "Triggering direct downloads for selected images...",
     status_zipping: "Compressing images into ZIP archive...",
     status_done: "Extracted images ready!",
@@ -49,6 +50,7 @@ const translations = {
     btn_download_direct: "Télécharger les {count} images directement",
     btn_download_zip: "Télécharger les {count} images (.ZIP)",
     status_extracting: "Analyse du PDF et extraction des images en cours...",
+    status_extracting_progress: "Extraction en cours... Page {current}/{total} ({count} images trouvées)",
     status_downloading_direct: "Lancement des téléchargements directs...",
     status_zipping: "Compression des images dans l'archive ZIP...",
     status_done: "Images extraites prêtes !",
@@ -374,15 +376,22 @@ async function loadPdfFile(file) {
 
   const progressBar = document.getElementById('progressBar');
   const statusMsg = document.getElementById('statusMsg');
-  const dict = translations[currentLang];
+  const dict = translations[currentLang] || translations.fr;
 
-  progressBar.style.width = '20%';
-  statusMsg.innerText = dict.status_extracting;
+  progressBar.style.width = '5%';
+  statusMsg.innerText = dict.status_extracting || "Analyse du PDF et extraction des images en cours...";
 
   try {
     const ab = await file.arrayBuffer();
-    extractedImagesList = await extractEmbeddedImagesFromPdf(ab, (pct) => {
-      progressBar.style.width = `${Math.min(90, 20 + pct * 0.7)}%`;
+    extractedImagesList = await extractEmbeddedImagesFromPdf(ab, (currentPage, totalPages, imagesCount) => {
+      const pct = Math.min(98, Math.round((currentPage / totalPages) * 100));
+      progressBar.style.width = `${pct}%`;
+
+      const progressTemplate = dict.status_extracting_progress || "Extraction en cours... Page {current}/{total} ({count} images trouvées)";
+      statusMsg.innerText = progressTemplate
+        .replace('{current}', currentPage)
+        .replace('{total}', totalPages)
+        .replace('{count}', imagesCount);
     });
 
     progressBar.style.width = '100%';
@@ -408,85 +417,139 @@ async function loadPdfFile(file) {
 /* ==================== CLIENT-SIDE PDF IMAGE EXTRACTION ENGINE ==================== */
 async function extractEmbeddedImagesFromPdf(arrayBuffer, progressCallback) {
   const { PDFDocument, PDFName } = PDFLib;
-  const pdfDoc = await PDFDocument.load(arrayBuffer);
-  const pages = pdfDoc.getPages();
+
+  // Single-pass Document Initializers to prevent multi-reloads out-of-memory crashes
+  let pdfDoc = null;
+  try {
+    pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+  } catch (e) {
+    console.warn("PDF-Lib document load warning:", e);
+  }
+
+  let pdfjsDoc = null;
+  try {
+    const pdfjsData = new Uint8Array(arrayBuffer.slice(0));
+    pdfjsDoc = await pdfjsLib.getDocument({ data: pdfjsData }).promise;
+  } catch (e) {
+    console.warn("PDF.js document load warning:", e);
+  }
+
+  const totalPages = pdfjsDoc ? pdfjsDoc.numPages : (pdfDoc ? pdfDoc.getPages().length : 0);
   const imageList = [];
   let count = 0;
+  const processedRefKeys = new Set();
 
-  for (let i = 0; i < pages.length; i++) {
-    const page = pages[i];
-    const { node } = page;
+  // Page-by-page streaming extraction loop
+  for (let i = 0; i < totalPages; i++) {
+    const pageNum = i + 1;
 
-    if (progressCallback) progressCallback(((i + 1) / pages.length) * 100);
+    // Report real-time progress update to UI
+    if (progressCallback) {
+      progressCallback(pageNum, totalPages, imageList.length);
+    }
 
-    const resources = node.Resources();
-    if (!resources) continue;
+    // Yield control to main thread every 2 pages to permit garbage collection and prevent tab freezing
+    if (i % 2 === 0) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
 
-    const xObject = resources.get(PDFName.of('XObject'));
-    if (!xObject) continue;
+    try {
+      // 1. Try PDF-Lib structural XObject image extraction for page i
+      if (pdfDoc && i < pdfDoc.getPages().length) {
+        const page = pdfDoc.getPages()[i];
+        const { node } = page;
+        const resources = node ? node.Resources() : null;
 
-    const xObjectDict = pdfDoc.context.lookup(xObject);
-    if (!xObjectDict || !xObjectDict.entries) continue;
+        if (resources) {
+          const xObject = resources.get(PDFName.of('XObject'));
+          if (xObject) {
+            const xObjectDict = pdfDoc.context.lookup(xObject);
+            if (xObjectDict && xObjectDict.entries) {
+              const entries = xObjectDict.entries();
 
-    const entries = xObjectDict.entries();
+              for (const [key, ref] of entries) {
+                try {
+                  const refKey = ref ? ref.toString() : null;
+                  if (refKey && processedRefKeys.has(refKey)) {
+                    continue; // Skip duplicate shared XObject image
+                  }
+                  if (refKey) processedRefKeys.add(refKey);
 
-    for (const [key, ref] of entries) {
-      const xSubObject = pdfDoc.context.lookup(ref);
-      if (!xSubObject || !xSubObject.dict) continue;
+                  const xSubObject = pdfDoc.context.lookup(ref);
+                  if (!xSubObject || !xSubObject.dict) continue;
 
-      const subtype = xSubObject.dict.get(PDFName.of('Subtype'));
-      if (subtype === PDFName.of('Image')) {
-        count++;
-        const width = xSubObject.dict.get(PDFName.of('Width'))?.numberValue || 800;
-        const height = xSubObject.dict.get(PDFName.of('Height'))?.numberValue || 600;
-        const filter = xSubObject.dict.get(PDFName.of('Filter'));
+                  const subtype = xSubObject.dict.get(PDFName.of('Subtype'));
+                  if (subtype === PDFName.of('Image')) {
+                    count++;
+                    const width = xSubObject.dict.get(PDFName.of('Width'))?.numberValue || 800;
+                    const height = xSubObject.dict.get(PDFName.of('Height'))?.numberValue || 600;
+                    const filter = xSubObject.dict.get(PDFName.of('Filter'));
 
-        let imgFormat = 'png';
-        let dataUrl = null;
+                    let imgFormat = 'png';
+                    let dataUrl = null;
 
-        if (filter === PDFName.of('DCTDecode') || (Array.isArray(filter?.array) && filter.array.includes(PDFName.of('DCTDecode')))) {
-          imgFormat = 'jpg';
-          const rawBytes = xSubObject.contents;
-          const blob = new Blob([rawBytes], { type: 'image/jpeg' });
-          dataUrl = await blobToDataURL(blob);
-        } else {
-          dataUrl = await renderPdfPageImageToDataUrl(arrayBuffer, i + 1);
-        }
+                    const isDCT = filter === PDFName.of('DCTDecode') || (Array.isArray(filter?.array) && filter.array.includes(PDFName.of('DCTDecode')));
 
-        if (dataUrl) {
-          imageList.push({
-            id: `img_${count}_${Date.now()}`,
-            dataUrl,
-            width,
-            height,
-            format: imgFormat,
-            selected: true
-          });
+                    if (isDCT && xSubObject.contents) {
+                      imgFormat = 'jpg';
+                      const rawBytes = xSubObject.contents;
+                      const blob = new Blob([rawBytes], { type: 'image/jpeg' });
+                      dataUrl = await blobToDataURL(blob);
+                    } else if (pdfjsDoc) {
+                      dataUrl = await renderPdfjsPageToDataUrl(pdfjsDoc, pageNum);
+                    }
+
+                    if (dataUrl) {
+                      imageList.push({
+                        id: `img_${count}_${Date.now()}`,
+                        dataUrl,
+                        width,
+                        height,
+                        format: imgFormat,
+                        selected: true,
+                        pageNum
+                      });
+                    }
+                  }
+                } catch (imgErr) {
+                  console.warn(`Skipping unparseable image on page ${pageNum}:`, imgErr);
+                }
+              }
+            }
+          }
         }
       }
+    } catch (pageErr) {
+      console.warn(`Skipping page ${pageNum} due to scan error:`, pageErr);
     }
   }
 
-  if (imageList.length === 0) {
-    const pdfjsData = new Uint8Array(arrayBuffer.slice(0));
-    const pdfjsDoc = await pdfjsLib.getDocument({ data: pdfjsData }).promise;
-    for (let pageNum = 1; pageNum <= pdfjsDoc.numPages; pageNum++) {
-      const page = await pdfjsDoc.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      imageList.push({
-        id: `img_page_${pageNum}`,
-        dataUrl: canvas.toDataURL('image/png'),
-        width: Math.round(viewport.width),
-        height: Math.round(viewport.height),
-        format: 'png',
-        selected: true
-      });
+  // Fallback: If no embedded XObject images were found, render page frames as images (limit to max 30 pages)
+  if (imageList.length === 0 && pdfjsDoc) {
+    const maxFallbackPages = Math.min(pdfjsDoc.numPages, 30);
+    for (let pageNum = 1; pageNum <= maxFallbackPages; pageNum++) {
+      if (progressCallback) {
+        progressCallback(pageNum, maxFallbackPages, imageList.length);
+      }
+      if (pageNum % 2 === 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+      try {
+        const dataUrl = await renderPdfjsPageToDataUrl(pdfjsDoc, pageNum);
+        if (dataUrl) {
+          imageList.push({
+            id: `img_page_${pageNum}`,
+            dataUrl,
+            width: 800,
+            height: 1100,
+            format: 'png',
+            selected: true,
+            pageNum
+          });
+        }
+      } catch (fallbackErr) {
+        console.warn(`Fallback render failed on page ${pageNum}:`, fallbackErr);
+      }
     }
   }
 
@@ -501,17 +564,30 @@ function blobToDataURL(blob) {
   });
 }
 
-async function renderPdfPageImageToDataUrl(arrayBuffer, pageNum) {
-  const pdfjsData = new Uint8Array(arrayBuffer.slice(0));
-  const pdfjsDoc = await pdfjsLib.getDocument({ data: pdfjsData }).promise;
-  const page = await pdfjsDoc.getPage(pageNum);
-  const viewport = page.getViewport({ scale: 2.0 });
-  const canvas = document.createElement('canvas');
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  const ctx = canvas.getContext('2d');
-  await page.render({ canvasContext: ctx, viewport }).promise;
-  return canvas.toDataURL('image/png');
+// Memory-optimized single instance page renderer
+async function renderPdfjsPageToDataUrl(pdfjsDoc, pageNum) {
+  try {
+    const page = await pdfjsDoc.getPage(pageNum);
+    const unscaledVP = page.getViewport({ scale: 1.0 });
+    const targetScale = Math.min(1.8, 1400 / (unscaledVP.width || 800));
+    const viewport = page.getViewport({ scale: targetScale });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(viewport.width);
+    canvas.height = Math.round(viewport.height);
+    const ctx = canvas.getContext('2d');
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    const dataUrl = canvas.toDataURL('image/png');
+
+    // Free memory canvas references
+    canvas.width = 0;
+    canvas.height = 0;
+    return dataUrl;
+  } catch (err) {
+    console.warn(`renderPdfjsPageToDataUrl failed for page ${pageNum}:`, err);
+    return null;
+  }
 }
 
 /* ==================== GALLERY & SELECTION MANAGEMENT ==================== */

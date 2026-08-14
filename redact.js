@@ -38,7 +38,7 @@ const translations = {
   fr: {
     nav_home: "Retour à l'accueil",
     nav_login: "Connexion",
-    hero_title: "Biffer & Masquer du <span class='text-coral'>PDF</span> en toute sécurité",
+    hero_title: "Masquage Confidentiel (Redaction) <span class='text-coral'>PDF</span>",
     hero_subtitle: "Masquez définitivement les données sensibles, textes et chiffres sur n'importe quelle page de votre PDF.",
     drop_title: "Glissez & déposez votre document PDF ici",
     drop_or: "ou",
@@ -594,6 +594,7 @@ function addPresetRedactionStrip() {
 
 function addRedactionBox(x, y, width, height) {
   const id = 'red_' + Date.now() + Math.random().toString(36).substring(2, 5);
+  const pdfCanvas = document.getElementById('pdfCanvas');
   placedRedactions.push({
     id,
     pageNum: currentPageNum,
@@ -601,7 +602,9 @@ function addRedactionBox(x, y, width, height) {
     y,
     width,
     height,
-    color: maskColor
+    color: maskColor,
+    pageRenderWidth: pdfCanvas ? pdfCanvas.width : 0,
+    pageRenderHeight: pdfCanvas ? pdfCanvas.height : 0
   });
   refreshVisibleRedactions();
 }
@@ -621,6 +624,7 @@ function refreshVisibleRedactions() {
     div.style.width = `${red.width}px`;
     div.style.height = `${red.height}px`;
     div.style.backgroundColor = red.color || '#000000';
+    div.style.boxSizing = 'border-box';
     div.style.touchAction = 'none';
 
     div.innerHTML = `
@@ -707,6 +711,7 @@ function makeDraggableAndResizable(element, redObj) {
   }
 
   document.addEventListener('mousemove', (e) => {
+    const pdfCanvas = document.getElementById('pdfCanvas');
     if (isDragging) {
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
@@ -716,6 +721,10 @@ function makeDraggableAndResizable(element, redObj) {
       element.style.top = `${newTop}px`;
       redObj.x = newLeft;
       redObj.y = newTop;
+      if (pdfCanvas) {
+        redObj.pageRenderWidth = pdfCanvas.width;
+        redObj.pageRenderHeight = pdfCanvas.height;
+      }
     } else if (isResizing) {
       const dw = e.clientX - startX;
       const dh = e.clientY - startY;
@@ -725,6 +734,10 @@ function makeDraggableAndResizable(element, redObj) {
       element.style.height = `${newH}px`;
       redObj.width = newW;
       redObj.height = newH;
+      if (pdfCanvas) {
+        redObj.pageRenderWidth = pdfCanvas.width;
+        redObj.pageRenderHeight = pdfCanvas.height;
+      }
     }
   });
 
@@ -732,6 +745,7 @@ function makeDraggableAndResizable(element, redObj) {
     if ((isDragging || isResizing) && e.touches && e.touches.length > 0) {
       e.preventDefault();
       const touch = e.touches[0];
+      const pdfCanvas = document.getElementById('pdfCanvas');
       if (isDragging) {
         const dx = touch.clientX - startX;
         const dy = touch.clientY - startY;
@@ -741,6 +755,10 @@ function makeDraggableAndResizable(element, redObj) {
         element.style.top = `${newTop}px`;
         redObj.x = newLeft;
         redObj.y = newTop;
+        if (pdfCanvas) {
+          redObj.pageRenderWidth = pdfCanvas.width;
+          redObj.pageRenderHeight = pdfCanvas.height;
+        }
       } else if (isResizing) {
         const dw = touch.clientX - startX;
         const dh = touch.clientY - startY;
@@ -750,6 +768,10 @@ function makeDraggableAndResizable(element, redObj) {
         element.style.height = `${newH}px`;
         redObj.width = newW;
         redObj.height = newH;
+        if (pdfCanvas) {
+          redObj.pageRenderWidth = pdfCanvas.width;
+          redObj.pageRenderHeight = pdfCanvas.height;
+        }
       }
     }
   }, { passive: false });
@@ -790,8 +812,6 @@ async function applyRedactionAndDownload() {
     progressBar.style.width = '60%';
 
     const pdfCanvas = document.getElementById('pdfCanvas');
-    const displayW = pdfCanvas.width;
-    const displayH = pdfCanvas.height;
 
     for (let i = 0; i < placedRedactions.length; i++) {
       const red = placedRedactions[i];
@@ -799,13 +819,24 @@ async function applyRedactionAndDownload() {
       const pdfPage = pdfDoc.getPage(pageIndex);
       const { width: pdfW, height: pdfH } = pdfPage.getSize();
 
+      const displayW = red.pageRenderWidth || (pdfCanvas ? pdfCanvas.width : 600);
+      const displayH = red.pageRenderHeight || (pdfCanvas ? pdfCanvas.height : 800);
+
       const scaleX = pdfW / displayW;
       const scaleY = pdfH / displayH;
 
-      const pdfRedW = red.width * scaleX;
-      const pdfRedH = red.height * scaleY;
-      const pdfRedX = red.x * scaleX;
-      const pdfRedY = pdfH - (red.y * scaleY) - pdfRedH;
+      const rawX = red.x * scaleX;
+      const rawY = red.y * scaleY;
+      const rawW = red.width * scaleX;
+      const rawH = red.height * scaleY;
+
+      // Clamped bottom-left origin PDF coordinates to prevent any overflow
+      const pdfRedX = Math.max(0, Math.min(pdfW - 2, rawX));
+      const pdfRedW = Math.max(1, Math.min(pdfW - pdfRedX, rawW));
+
+      const topY = Math.max(0, Math.min(pdfH - 2, rawY));
+      const pdfRedH = Math.max(1, Math.min(pdfH - topY, rawH));
+      const pdfRedY = Math.max(0, pdfH - topY - pdfRedH);
 
       // Convert hex color to PDFLib RGB
       const hex = (red.color || '#000000').replace('#', '');

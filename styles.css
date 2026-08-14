@@ -114,12 +114,21 @@ body {
 
 /* Zero-Scroll Forced Preview Optimization */
 .zero-scroll-preview-container {
-  max-height: max(320px, calc(72vh - 100px));
+  max-height: 100vh;
   min-height: 280px;
-  overflow: auto;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.zero-scroll-preview-container canvas,
+.zero-scroll-preview-container img,
+.zero-scroll-preview-container > div {
+  max-height: 100vh;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 
