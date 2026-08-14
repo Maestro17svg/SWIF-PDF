@@ -611,6 +611,7 @@ async function processOcrTextExtraction() {
     setTimeout(() => {
       document.getElementById('progressSection').classList.add('hidden');
       document.getElementById('resultSection').classList.remove('hidden');
+      document.getElementById('resultSection')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       const textarea = document.getElementById('ocrOutputTextarea');
       textarea.value = extractedFullText;

@@ -978,6 +978,7 @@ async function applyWatermarkAndDownload() {
       document.getElementById('resultSection').classList.remove('hidden');
       document.getElementById('resFileName').innerText = processedFileName;
       document.getElementById('resModeText').innerText = watermarkMode === 'text' ? 'Text Watermark' : 'Image Logo Watermark';
+      document.getElementById('resultSection')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       const downloadBtn = document.getElementById('downloadWatermarkedBtn');
       downloadBtn.onclick = () => {

@@ -403,6 +403,7 @@ async function loadPdfFile(file) {
         resetTool();
       } else {
         document.getElementById('editorSection').classList.remove('hidden');
+        document.getElementById('editorSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         renderImageGallery();
       }
     }, 400);

@@ -2138,6 +2138,78 @@ window.toolsSeo = {
       seo_why_p1: "قراءات PDF التقليدية تقدم التمرير العمودي الممل عند قراءة المجلات الرقمية.",
       seo_why_p2: "يعيد <strong>SWIF PDF 3D Flipbook</strong> متعة تقليب الكتب الحقيقية بنسبة <strong>١٠٠٪ محلياً في جهازك</strong>."
     }
+  },
+  'compress-image': {
+    en: {
+      tool_compress_img_title: "Image Compressor",
+      tool_compress_img_desc: "Compress JPG, PNG & WebP images",
+      header_badge: "Image Compressor",
+      hero_title: "Compress <span class='text-[#22C55E]'>Images</span> (JPG, PNG, WEBP)",
+      hero_subtitle: "Reduce image file size up to 80% with real-time quality control and 100% browser privacy.",
+      drop_title: "Drag & drop your images here",
+      drop_or: "or",
+      drop_btn: "Select Images",
+      drop_info: "Supported formats: JPG, PNG, WebP. 100% browser processing.",
+      slider_title: "Compression Level & Quality",
+      slider_sub: "Adjust slider to balance file size reduction and visual quality.",
+      quality_label: "Quality:",
+      min_compress: "Max Compress (10%)",
+      balanced: "Balanced (70%)",
+      max_quality: "High Quality (90%)",
+      download_info: "Files ready for instant download.",
+      btn_download_all: "Download Images"
+    },
+    fr: {
+      tool_compress_img_title: "Compresseur d'Image",
+      tool_compress_img_desc: "Réduisez le poids de vos photos",
+      header_badge: "Compresseur d'Image",
+      hero_title: "Compresser des <span class='text-[#22C55E]'>Images</span> (JPG, PNG, WEBP)",
+      hero_subtitle: "Réduisez le poids de vos photos jusqu'à 80% sans perte de qualité avec un contrôle ajustable en temps réel.",
+      drop_title: "Glissez & déposez vos images ici",
+      drop_or: "ou",
+      drop_btn: "Sélectionner des images",
+      drop_info: "Formats acceptés : JPG, PNG, WebP. Traitement 100% local dans votre navigateur.",
+      slider_title: "Niveau de Compression & Qualité",
+      slider_sub: "Ajustez le curseur pour équilibrer la réduction de poids et la qualité visuelle.",
+      quality_label: "Qualité :",
+      min_compress: "Compression Max (10%)",
+      balanced: "Équilibré (70%)",
+      max_quality: "Haute Qualité (90%)",
+      download_info: "Fichiers prêts pour un téléchargement immédiat.",
+      btn_download_all: "Télécharger les images"
+    }
+  },
+  'word-to-pdf': {
+    en: {
+      tool_word_pdf_title: "Word to PDF",
+      tool_word_pdf_desc: "Convert .docx files to PDF",
+      header_badge: "Word to PDF",
+      hero_title: "Convert <span class='text-[#22C55E]'>Word (DOCX)</span> to PDF",
+      hero_subtitle: "Transform your Word documents into print-ready PDF files with perfect layouts and 100% browser privacy.",
+      drop_title: "Drag & drop your Word (.docx) document here",
+      drop_or: "or",
+      drop_btn: "Select Word File",
+      drop_info: "Supported format: Microsoft Word (.docx). 100% local processing.",
+      res_title: "Word Document Converted Successfully",
+      preview_title: "Generated PDF Preview",
+      btn_download: "Download PDF",
+      btn_reset: "Convert Another File"
+    },
+    fr: {
+      tool_word_pdf_title: "Word en PDF",
+      tool_word_pdf_desc: "Convertissez vos .docx en PDF",
+      header_badge: "Word en PDF",
+      hero_title: "Convertir <span class='text-[#22C55E]'>Word (DOCX)</span> en PDF",
+      hero_subtitle: "Transformez vos documents Word en fichiers PDF prêts à imprimer avec une mise en page parfaite et une confidentialité 100% locale.",
+      drop_title: "Glissez & déposez votre document Word (.docx) ici",
+      drop_or: "ou",
+      drop_btn: "Sélectionner un fichier Word",
+      drop_info: "Formats pris en charge : Microsoft Word (.docx). Traitement 100% sécurisé et local.",
+      res_title: "Document Word Converti avec Succès",
+      preview_title: "Aperçu du PDF Généré",
+      btn_download: "Télécharger le PDF",
+      btn_reset: "Convertir un autre fichier"
+    }
   }
 };
 

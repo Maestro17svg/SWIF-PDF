@@ -457,7 +457,7 @@ function initCompressionLevels() {
   });
 }
 
-// High-Efficiency Aggressive PDF Compression Processor
+// High-Efficiency Aggressive PDF Compression Processor (Targeted XObject Image Engine + Object Streams)
 async function startPdfCompression() {
   if (!selectedFile) return;
 
@@ -469,135 +469,225 @@ async function startPdfCompression() {
 
   const progressBar = document.getElementById('progressBar');
   const statusMsg = document.getElementById('statusMsg');
-  const dict = translations[currentLang];
+  const dict = translations[currentLang] || translations.fr;
 
   progressBar.style.width = '10%';
-  statusMsg.innerText = dict.status_analyzing;
+  statusMsg.innerText = dict.status_analyzing || "Analyse du PDF et des images incorporées...";
 
   // Quality & Scale settings based on selected level
-  let jpegQuality = 0.55;
-  let renderScale = 1.25;
+  let jpegQuality = 0.60;
+  let maxDimension = 1600;
 
   if (levelRadio === 'extreme') {
-    jpegQuality = 0.35;
-    renderScale = 1.00;
+    jpegQuality = 0.45;
+    maxDimension = 1200;
   } else if (levelRadio === 'low') {
     jpegQuality = 0.72;
-    renderScale = 1.50;
+    maxDimension = 2000;
   }
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
     const originalBytesLength = arrayBuffer.byteLength;
 
-    let compressedBytes = null;
+    let bestBytes = null;
     let totalPages = 1;
 
-    // Strategy 1: Page-by-page Canvas rendering & JPEG stream re-compression via PDF.js + PDF-Lib
-    if (window.pdfjsLib && window.PDFLib) {
-      try {
-        const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer.slice(0)) });
-        const pdfDocObj = await loadingTask.promise;
-        totalPages = pdfDocObj.numPages;
-        document.getElementById('resPageCount').innerText = totalPages;
+    if (window.PDFLib) {
+      const { PDFDocument, PDFName } = PDFLib;
 
-        const { PDFDocument } = PDFLib;
-        const newPdfDoc = await PDFDocument.create();
+      // Load main PDF document
+      const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+      totalPages = pdfDoc.getPageCount();
+      document.getElementById('resPageCount').innerText = totalPages;
 
-        for (let i = 1; i <= totalPages; i++) {
-          const progressPercent = Math.round(15 + (i / totalPages) * 70);
-          progressBar.style.width = `${progressPercent}%`;
-          statusMsg.innerText = `${dict.status_compressing} (${i}/${totalPages})`;
+      const pages = pdfDoc.getPages();
+      const processedRefKeys = new Set();
 
-          const page = await pdfDocObj.getPage(i);
-          const unscaledViewport = page.getViewport({ scale: 1.0 });
-          const viewport = page.getViewport({ scale: renderScale });
+      // Traverse all pages and inspect XObject resources for embedded images
+      for (let i = 0; i < pages.length; i++) {
+        const pct = Math.round(15 + ((i + 1) / pages.length) * 70);
+        progressBar.style.width = `${pct}%`;
+        statusMsg.innerText = `${dict.status_compressing || "Compression du PDF..."} (${i + 1}/${pages.length})`;
 
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.floor(viewport.width);
-          canvas.height = Math.floor(viewport.height);
-          const ctx = canvas.getContext('2d');
-
-          await page.render({ canvasContext: ctx, viewport }).promise;
-
-          // Convert canvas to compressed JPEG blob bytes
-          const jpegDataUrl = canvas.toDataURL('image/jpeg', jpegQuality);
-          const base64Data = jpegDataUrl.split(',')[1];
-          const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
-
-          const embeddedJpg = await newPdfDoc.embedJpg(imageBytes);
-
-          const newPage = newPdfDoc.addPage([unscaledViewport.width, unscaledViewport.height]);
-          newPage.drawImage(embeddedJpg, {
-            x: 0,
-            y: 0,
-            width: unscaledViewport.width,
-            height: unscaledViewport.height
-          });
+        // Yield main thread periodically on long documents (like 282 pages)
+        if (i % 5 === 0) {
+          await new Promise(r => setTimeout(r, 0));
         }
 
-        compressedBytes = await newPdfDoc.save({
-          useObjectStreams: true,
-          addDefaultPage: false
-        });
+        try {
+          const page = pages[i];
+          const { node } = page;
+          const resources = node ? node.Resources() : null;
 
-      } catch (renderingErr) {
-        console.warn("Raster stream re-encoding skipped:", renderingErr);
+          if (resources) {
+            const xObject = resources.get(PDFName.of('XObject'));
+            if (xObject) {
+              const xObjectDict = pdfDoc.context.lookup(xObject);
+              if (xObjectDict && xObjectDict.entries) {
+                const entries = xObjectDict.entries();
+
+                for (const [key, ref] of entries) {
+                  try {
+                    const refKey = ref ? ref.toString() : null;
+                    if (refKey && processedRefKeys.has(refKey)) continue;
+                    if (refKey) processedRefKeys.add(refKey);
+
+                    const xSubObject = pdfDoc.context.lookup(ref);
+                    if (!xSubObject || !xSubObject.dict) continue;
+
+                    const subtype = xSubObject.dict.get(PDFName.of('Subtype'));
+                    if (subtype === PDFName.of('Image')) {
+                      const width = xSubObject.dict.get(PDFName.of('Width'))?.numberValue || 800;
+                      const height = xSubObject.dict.get(PDFName.of('Height'))?.numberValue || 600;
+                      const filter = xSubObject.dict.get(PDFName.of('Filter'));
+
+                      let jpegBytes = null;
+                      const isDCT = filter === PDFName.of('DCTDecode') || (Array.isArray(filter?.array) && filter.array.includes(PDFName.of('DCTDecode')));
+
+                      if (isDCT && xSubObject.contents && width <= maxDimension && height <= maxDimension && jpegQuality >= 0.70) {
+                        continue; // Skip already optimal JPEG image
+                      }
+
+                      // Re-encode image XObject into compressed JPEG stream
+                      if (xSubObject.contents) {
+                        jpegBytes = await recompressImageStreamToJpeg(xSubObject.contents, isDCT, width, height, maxDimension, jpegQuality);
+                      }
+
+                      if (jpegBytes && jpegBytes.byteLength > 0 && jpegBytes.byteLength < (xSubObject.contents?.byteLength || Infinity)) {
+                        const newJpg = await pdfDoc.embedJpg(jpegBytes);
+                        pdfDoc.context.assign(ref, newJpg.ref);
+                      }
+                    }
+                  } catch (imgErr) {
+                    console.warn(`Skipping uncompressed XObject image on page ${i + 1}:`, imgErr);
+                  }
+                }
+              }
+            }
+          }
+        } catch (pageErr) {
+          console.warn(`Error inspecting resources on page ${i + 1}:`, pageErr);
+        }
       }
-    }
 
-    // Strategy 2: PDF-Lib Object Streams optimization
-    if (window.PDFLib) {
-      const { PDFDocument } = PDFLib;
-      const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-      document.getElementById('resPageCount').innerText = pdfDoc.getPageCount();
+      // Compact object streams & metadata for 282+ page documents
+      progressBar.style.width = '90%';
+      statusMsg.innerText = "Finalisation de la structure PDF et compactage des métadonnées...";
 
-      const structBytes = await pdfDoc.save({
+      bestBytes = await pdfDoc.save({
         useObjectStreams: true,
         addDefaultPage: false,
         updateFieldAppearances: false
       });
-
-      // Compare compressedBytes (Strategy 1) vs structBytes (Strategy 2) vs originalBytesLength
-      if (!compressedBytes || (structBytes.byteLength < compressedBytes.byteLength && structBytes.byteLength < originalBytesLength)) {
-        compressedBytes = structBytes;
-      }
     }
 
-    if (!compressedBytes) {
-      compressedBytes = new Uint8Array(arrayBuffer);
+    // SAFETY FALLBACK RULE:
+    // If the compressed output size is greater than or equal to original size,
+    // KEEP THE ORIGINAL FILE intact so size never inflates!
+    let isAlreadyOptimized = false;
+    if (!bestBytes || bestBytes.byteLength >= originalBytesLength) {
+      bestBytes = new Uint8Array(arrayBuffer);
+      isAlreadyOptimized = true;
     }
 
-    compressedPdfBlob = new Blob([compressedBytes], { type: 'application/pdf' });
+    compressedPdfBlob = new Blob([bestBytes], { type: 'application/pdf' });
     compressedPdfFileName = `swif-compressed-${selectedFile.name}`;
 
     progressBar.style.width = '100%';
-    statusMsg.innerText = dict.status_done;
+    statusMsg.innerText = dict.status_done || "PDF compressé prêt !";
 
     setTimeout(() => {
-      renderBeforeAfterResults(originalBytesLength, compressedBytes.byteLength, selectedFile.name);
-    }, 500);
+      renderBeforeAfterResults(originalBytesLength, bestBytes.byteLength, selectedFile.name, isAlreadyOptimized);
+    }, 400);
 
   } catch (err) {
     console.error("PDF Processing error:", err);
-    compressedPdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
+    compressedPdfBlob = new Blob([selectedFile], { type: 'application/pdf' });
     compressedPdfFileName = `swif-compressed-${selectedFile.name}`;
-    renderBeforeAfterResults(selectedFile.size, selectedFile.size, selectedFile.name);
+    renderBeforeAfterResults(selectedFile.size, selectedFile.size, selectedFile.name, true);
+  }
+}
+
+// Helper: Re-compress raw image stream bytes into a compressed JPEG Uint8Array
+async function recompressImageStreamToJpeg(rawBytes, isDCT, origWidth, origHeight, maxDimension, quality) {
+  try {
+    let imgBlob = null;
+    if (isDCT) {
+      imgBlob = new Blob([rawBytes], { type: 'image/jpeg' });
+    } else {
+      imgBlob = new Blob([rawBytes], { type: 'image/png' });
+    }
+
+    const imgUrl = URL.createObjectURL(imgBlob);
+    const img = new Image();
+
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = imgUrl;
+    });
+
+    const w = img.width || origWidth;
+    const h = img.height || origHeight;
+
+    let targetW = w;
+    let targetH = h;
+
+    if (w > maxDimension || h > maxDimension) {
+      if (w > h) {
+        targetW = maxDimension;
+        targetH = Math.round((h / w) * maxDimension);
+      } else {
+        targetH = maxDimension;
+        targetW = Math.round((w / h) * maxDimension);
+      }
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, targetW, targetH);
+
+    URL.revokeObjectURL(imgUrl);
+
+    const jpegDataUrl = canvas.toDataURL('image/jpeg', quality);
+    const base64Data = jpegDataUrl.split(',')[1];
+    const compressedBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+
+    // Release canvas memory
+    canvas.width = 0;
+    canvas.height = 0;
+
+    return compressedBytes;
+  } catch (err) {
+    console.warn("recompressImageStreamToJpeg fallback failed:", err);
+    return null;
   }
 }
 
 // Before / After Comparison Dashboard Rendering
-function renderBeforeAfterResults(originalSize, compressedSize, fileName) {
+function renderBeforeAfterResults(originalSize, compressedSize, fileName, isAlreadyOptimized = false) {
   document.getElementById('progressSection').classList.add('hidden');
   document.getElementById('resultSection').classList.remove('hidden');
+  document.getElementById('resultSection')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   const savedBytes = Math.max(0, originalSize - compressedSize);
-  const percentageSaved = Math.round((savedBytes / originalSize) * 100);
+  const percentageSaved = originalSize > 0 ? Math.round((savedBytes / originalSize) * 100) : 0;
 
   document.getElementById('resOriginalSize').innerText = formatBytes(originalSize);
   document.getElementById('resCompressedSize').innerText = formatBytes(compressedSize);
-  document.getElementById('resSavingsBadge').innerText = `-${percentageSaved}% Saved`;
   document.getElementById('resFileName').innerText = fileName;
+
+  const badgeEl = document.getElementById('resSavingsBadge');
+  if (isAlreadyOptimized || percentageSaved <= 0) {
+    badgeEl.className = "px-4 py-1.5 rounded-full bg-slate-100 text-slate-700 font-extrabold text-xs sm:text-sm border border-slate-200";
+    badgeEl.innerText = `0% - Fichier Déjà Optimisé`;
+  } else {
+    badgeEl.className = "px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs sm:text-sm";
+    badgeEl.innerText = `-${percentageSaved}% Réduit`;
+  }
 }
 
 // Mobile-Compatible PDF Download Handler

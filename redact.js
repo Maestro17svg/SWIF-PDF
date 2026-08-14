@@ -867,6 +867,7 @@ async function applyRedactionAndDownload() {
       document.getElementById('resultSection').classList.remove('hidden');
       document.getElementById('resFileName').innerText = redactedFileName;
       document.getElementById('resMasksCount').innerText = `${placedRedactions.length} blackout masks`;
+      document.getElementById('resultSection')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       const downloadBtn = document.getElementById('downloadRedactedBtn');
       downloadBtn.onclick = () => {

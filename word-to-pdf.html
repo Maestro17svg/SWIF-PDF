@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convertir Word en PDF Gratuitement en Ligne (DOCX en PDF) | SWIF PDF</title>
+  <meta name="description" content="Convertissez vos documents Word (.docx) en fichiers PDF gratuitement et instantanément. Conversion 100% locale dans votre navigateur pour une confidentialité absolue.">
+  <meta name="keywords" content="convertir Word en PDF, DOCX en PDF gratuit, transformeur Word PDF en ligne, convertisseur document Word, conversion local DOCX PDF">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/word-to-pdf.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Convertir Word (DOCX) en PDF Gratuitement - SWIF PDF">
+  <meta property="og:description" content="Transformez vos fichiers Word en documents PDF professionnels rapidement et en toute sécurité sans envoyer vos fichiers sur un serveur.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/word-to-pdf.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Convertisseur Word en PDF SWIF PDF",
+    "url": "https://swifpdf.com/word-to-pdf.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "description": "Convertisseur gratuit de fichiers Word .docx vers PDF s'exécutant localement dans le navigateur.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' } }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Mammoth.js for docx parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <!-- html2pdf.js for html to vector PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Styling for rendered Word content inside PDF generator container */
+    .word-rendered-content {
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      color: #1e2029;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+    .word-rendered-content h1 { font-size: 22px; font-weight: 800; margin-top: 16px; margin-bottom: 10px; color: #0f172a; }
+    .word-rendered-content h2 { font-size: 18px; font-weight: 700; margin-top: 14px; margin-bottom: 8px; color: #1e293b; }
+    .word-rendered-content h3 { font-size: 15px; font-weight: 700; margin-top: 12px; margin-bottom: 6px; color: #334155; }
+    .word-rendered-content p { margin-bottom: 10px; }
+    .word-rendered-content table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    .word-rendered-content th, .word-rendered-content td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
+    .word-rendered-content th { background-color: #f8fafc; font-weight: 700; }
+    .word-rendered-content img { max-width: 100%; height: auto; margin: 10px 0; border-radius: 8px; }
+  </style>
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1" data-i18n="header_badge">Word en PDF</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Retour à l'accueil</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <!-- Language Dropdown -->
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇫🇷</span>
+            <span id="currentLangName">Français</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobileMenuBtn" type="button" class="md:hidden p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors" aria-label="Toggle menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobileMenu" class="hidden md:hidden mobile-nav-drawer border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-1.5 shadow-xl">
+      <a href="index.html#tools-section" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="grid" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Tous les outils</span>
+      </a>
+      <a href="word-to-pdf.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="file-text" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Word en PDF</span>
+      </a>
+      <a href="compress-image.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="image-down" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Compresseur d'Image</span>
+      </a>
+      <a href="compress.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="minimize-2" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Compresser PDF</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <!-- Hero Header -->
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Convertir <span class="text-[#22C55E]">Word (DOCX)</span> en PDF
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto" data-i18n="hero_subtitle">
+          Transformez vos documents Word en fichiers PDF prêts à imprimer avec une mise en page parfaite et une confidentialité 100% locale.
+        </p>
+      </div>
+
+      <!-- 1. Dropzone Section -->
+      <div id="dropzoneSection" class="bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 transition-all hover:border-[#22C55E]">
+        <input type="file" id="wordFileInput" accept=".docx, application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="hidden">
+
+        <div id="dropzone" onclick="document.getElementById('wordFileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="file-text" class="w-10 h-10"></i>
+          </div>
+
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Glissez & déposez votre document Word (.docx) ici</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">ou</p>
+          </div>
+
+          <div>
+            <button type="button" class="px-8 py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 transition-all inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Sélectionner un fichier Word</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100" data-i18n="drop_info">
+          Formats pris en charge : Microsoft Word (.docx). Traitement 100% sécurisé et local.
+        </p>
+      </div>
+
+      <!-- 2. Progress Spinner Section -->
+      <div id="progressSection" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-[#22C55E] h-full w-0 transition-all duration-300"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Conversion du document Word en PDF...</p>
+        </div>
+      </div>
+
+      <!-- 3. Conversion Summary Result Section -->
+      <div id="resultSection" class="hidden bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-2xl space-y-8">
+        <div class="text-center space-y-2 border-b border-slate-100 pb-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto font-black">
+            <i data-lucide="check-circle-2" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-black text-slate-900" data-i18n="res_title">Document Word Converti avec Succès</h3>
+          <p id="resFileName" class="text-xs text-slate-400 font-medium">mon-document.pdf</p>
+        </div>
+
+        <!-- Hidden Offscreen Container for HTML-to-PDF Conversion -->
+        <div class="hidden">
+          <div id="wordRenderContainer" class="word-rendered-content bg-white p-8"></div>
+        </div>
+
+        <!-- Document Preview Container -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider text-center" data-i18n="preview_title">Aperçu du PDF Généré</h4>
+          <div class="bg-slate-100 rounded-2xl p-6 border border-slate-200 max-h-[420px] overflow-y-auto">
+            <div id="previewCard" class="bg-white p-6 rounded-xl shadow-lg word-rendered-content max-w-2xl mx-auto"></div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <button id="downloadPdfBtn" onclick="downloadConvertedPdf()" class="flex-1 py-4 px-8 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span data-i18n="btn_download">Télécharger le PDF</span>
+          </button>
+          <button onclick="resetWordToPdfTool()" class="py-4 px-6 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm flex items-center justify-center gap-2">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span data-i18n="btn_reset">Convertir un autre fichier</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Comment convertir un fichier <span class="text-[#22C55E]">Word en PDF</span> gratuitement ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">
+            Transformez vos fichiers DOCX en documents PDF universels lisibles sur n'importe quel ordinateur ou smartphone.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900">1. Déposez votre Fichier .DOCX</h3>
+            <p>Glissez-déposez votre document Microsoft Word dans la zone d'envoi sécurisée.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-emerald-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900">2. Conversion Locale Immédiate</h3>
+            <p>Le moteur d'analyse convertit le formatage, les tableaux et les paragraphes sans aucun serveur externe.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900">3. Téléchargez votre PDF</h3>
+            <p>Obtenez votre fichier PDF finalisé, parfaitement structuré et prêt pour l'impression ou le partage.</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900">Pourquoi convertir vos fichiers Word en PDF avec SWIF PDF ?</h2>
+          <p>
+            Le format Microsoft Word peut afficher des décalages de mise en page lorsqu'il est ouvert sur d'autres versions ou téléphones mobiles. La conversion en **PDF** fige la typographie, les tableaux et la structure pour une présentation toujours professionnelle.
+          </p>
+          <p>
+            Avec **SWIF PDF**, l'ensemble de la conversion est réalisée **100% en local dans votre navigateur**, vous garantissant une confidentialité maximale pour vos contrats, CVs et documents confidentiels.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400 py-12 mt-auto border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-lg font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+      </div>
+      <p>© 2026 SWIF PDF. Tous droits réservés. Outils PDF 100% locaux et gratuits.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="word-to-pdf.js"></script>
+</body>
+</html>

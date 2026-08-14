@@ -1012,6 +1012,127 @@ const articlesStore = {
         </div>
       `
     }
+  },
+  'compress-image-guide': {
+    id: 'compress-image-guide',
+    category: 'cat_compress_organize',
+    readTime: 5,
+    toolUrl: 'compress-image.html',
+    toolIcon: 'image-down',
+    titles: {
+      fr: "Comment Compresser des Images (JPG, PNG, WebP) sans Perte de Qualité ?",
+      en: "How to Compress Images (JPG, PNG, WebP) Online Without Quality Loss?"
+    },
+    descs: {
+      fr: "Découvrez les meilleures techniques pour réduire le poids de vos photos jusqu'à 80% en local grâce à la technologie HTML5 Canvas.",
+      en: "Discover top techniques to reduce image file size by up to 80% locally using HTML5 Canvas technology."
+    },
+    contents: {
+      fr: `
+        <div class="space-y-6 text-slate-800 leading-relaxed">
+          <h1 class="text-3xl font-black text-slate-900 tracking-tight">Comment Compresser des Images (JPG, PNG, WebP) sans Perte de Qualité ?</h1>
+
+          <p class="text-base text-slate-600 font-medium leading-relaxed">
+            Les visuels haute définition sont indispensables pour capter l'attention des internautes. Cependant, des fichiers images trop lourds ralentissent considérablement le temps de chargement des pages web, nuisent au référencement SEO et saturent les boîtes mail.
+          </p>
+
+          <h2 class="text-xl font-bold text-slate-900 pt-4">Pourquoi optimiser le poids de vos visuels ?</h2>
+          <p>
+            Une page web contenant plusieurs photographies non compressées de 4 Mo chacune met plusieurs secondes à s'afficher sur smartphone. Google pénalise les sites lents dans son algorithme d'indexation. De plus, les boîtes de réception d'emails imposent souvent une taille maximale de pièce jointe (10 à 25 Mo).
+          </p>
+
+          ${generateScreenshotPlaceholder("Compresseur d'Image SWIF PDF avec Curseur de Qualité")}
+
+          <h2 class="text-xl font-bold text-slate-900 pt-4">La technologie Canvas : Compression 100% Locale</h2>
+          <p>
+            Avec l'outil **SWIF PDF**, l'ensemble du ré-encodage s'effectue dans la mémoire vive de votre navigateur via l'API HTML5 Canvas. Vos photographies ne sont **jamais envoyées sur un serveur externe**.
+          </p>
+
+          <h2 class="text-xl font-bold text-slate-900 pt-4">Guide Pratique en 3 Étapes</h2>
+          <ol class="list-decimal pl-6 space-y-2">
+            <li>Glissez-déposez vos fichiers JPG, PNG ou WebP dans la zone de traitement.</li>
+            <li>Ajustez le curseur de qualité (de 10% à 90%) et observez l'estimation de taille en temps réel.</li>
+            <li>Téléchargez vos images optimisées séparément ou dans une archive ZIP en 1-clic.</li>
+          </ol>
+
+          <div class="pt-6 flex justify-center">
+            <a href="compress-image.html" class="px-8 py-4 rounded-2xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl transition-all flex items-center gap-2.5">
+              <i data-lucide="image-down" class="w-5 h-5"></i>
+              <span>Ouvrir le Compresseur d'Image Gratuit</span>
+            </a>
+          </div>
+        </div>
+      `,
+      en: `
+        <div class="space-y-6 text-slate-800 leading-relaxed">
+          <h1 class="text-3xl font-black text-slate-900 tracking-tight">How to Compress Images (JPG, PNG, WebP) Online Without Quality Loss?</h1>
+          <p>Learn how to optimize your images using browser-side HTML5 Canvas technology for zero quality loss and absolute privacy.</p>
+          <div class="pt-6 flex justify-center">
+            <a href="compress-image.html" class="px-8 py-4 rounded-2xl bg-[#22C55E] text-white font-black text-sm shadow-xl flex items-center gap-2">
+              <i data-lucide="image-down" class="w-5 h-5"></i>
+              <span>Try Free Image Compressor</span>
+            </a>
+          </div>
+        </div>
+      `
+    }
+  },
+  'word-to-pdf-guide': {
+    id: 'word-to-pdf-guide',
+    category: 'cat_convert_ocr',
+    readTime: 6,
+    toolUrl: 'word-to-pdf.html',
+    toolIcon: 'file-text',
+    titles: {
+      fr: "Convertir un Fichier Word (.DOCX) en PDF Gratuitement sans Décalage de Mise en Page",
+      en: "Convert Word (.DOCX) Files to PDF Online for Free Without Layout Shifts"
+    },
+    descs: {
+      fr: "Apprenez à figer la mise en page, la typographie et les tableaux de vos documents Word en les transformant en PDF en toute sécurité.",
+      en: "Learn how to freeze layouts, typography, and tables in Word documents by converting them securely to PDF."
+    },
+    contents: {
+      fr: `
+        <div class="space-y-6 text-slate-800 leading-relaxed">
+          <h1 class="text-3xl font-black text-slate-900 tracking-tight">Convertir un Fichier Word (.DOCX) en PDF Gratuitement sans Décalage de Mise en Page</h1>
+
+          <p class="text-base text-slate-600 font-medium leading-relaxed">
+            Lorsque vous partagez un document Word (.docx) avec un collègue, un client ou un recruteur, le résultat affiché dépend de sa version de Microsoft Word et des polices installées sur son système. La conversion en PDF résout définitivement ce problème.
+          </p>
+
+          <h2 class="text-xl font-bold text-slate-900 pt-4">Pourquoi le format PDF est-il indispensable ?</h2>
+          <p>
+            Le format PDF (Portable Document Format) fige la disposition du texte, les tableaux, les marges et les images. Le document apparaît **exactement à l'identique**, quel que soit l'appareil (Windows, Mac, iOS, Android).
+          </p>
+
+          ${generateScreenshotPlaceholder("Convertisseur Word vers PDF SWIF PDF en Ligne")}
+
+          <h2 class="text-xl font-bold text-slate-900 pt-4">Conversion Locale et Confidentielle</h2>
+          <p>
+            Grâce à l'analyseur **Mammoth.js**, SWIF PDF convertit la structure du fichier `.docx` directement dans votre navigateur. Vos contrats d'affaires, rapports financiers et CVs ne sont **jamais téléversés sur un serveur distant**.
+          </p>
+
+          <div class="pt-6 flex justify-center">
+            <a href="word-to-pdf.html" class="px-8 py-4 rounded-2xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl transition-all flex items-center gap-2.5">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+              <span>Convertir Word en PDF Maintenant</span>
+            </a>
+          </div>
+        </div>
+      `,
+      en: `
+        <div class="space-y-6 text-slate-800 leading-relaxed">
+          <h1 class="text-3xl font-black text-slate-900 tracking-tight">Convert Word (.DOCX) Files to PDF Online for Free Without Layout Shifts</h1>
+          <p>Freeze your Word documents into crisp, fixed layout PDF files directly inside your browser memory.</p>
+          <div class="pt-6 flex justify-center">
+            <a href="word-to-pdf.html" class="px-8 py-4 rounded-2xl bg-[#22C55E] text-white font-black text-sm shadow-xl flex items-center gap-2">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+              <span>Try Word to PDF Converter</span>
+            </a>
+          </div>
+        </div>
+      `
+    }
   }
 };
 

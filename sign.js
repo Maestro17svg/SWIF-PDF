@@ -947,6 +947,7 @@ async function applySignaturesAndDownload() {
       document.getElementById('resultSection').classList.remove('hidden');
       document.getElementById('resFileName').innerText = signedFileName;
       document.getElementById('resSignaturesCount').innerText = `${placedOverlays.length} signatures/stamps`;
+      document.getElementById('resultSection')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       const downloadBtn = document.getElementById('downloadSignedBtn');
       downloadBtn.onclick = () => {

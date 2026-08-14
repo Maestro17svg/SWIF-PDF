@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compresseur d'Images Gratuit en Ligne (JPG, PNG, WEBP) | SWIF PDF</title>
+  <meta name="description" content="Compressez vos images JPG, PNG et WebP gratuitement en ligne sans perte de qualité visuelle. Réduisez le poids de vos photos jusqu'à 80% directement dans votre navigateur.">
+  <meta name="keywords" content="compresser image gratuit, optimiser photo en ligne, réduire taille JPG PNG WebP, compresseur image sans perte, compresser photo rapide">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/compress-image.html">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Compresseur d'Images Gratuit en Ligne - SWIF PDF">
+  <meta property="og:description" content="Réduisez la taille de vos fichiers images (JPG, PNG, WebP) instantanément et en toute sécurité sans envoi sur un serveur.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://swifpdf.com/compress-image.html">
+
+  <!-- Schema.org JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Compresseur d'Images SWIF PDF",
+    "url": "https://swifpdf.com/compress-image.html",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "All",
+    "description": "Outil gratuit d'optimisation et de compression d'images JPG, PNG et WebP s'exécutant localement dans le navigateur.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { coral: { DEFAULT: '#22C55E', hover: '#16A34A', 50: '#F0FDF4' } }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="image-down" class="w-6 h-6"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          <span class="text-[9px] uppercase font-bold tracking-widest text-slate-400 -mt-1" data-i18n="header_badge">Compresseur d'Image</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Retour à l'accueil</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <!-- Language Dropdown -->
+        <div class="relative">
+          <button id="langDropdownBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50">
+            <span id="currentLangFlag" class="text-base">🇫🇷</span>
+            <span id="currentLangName">Français</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          <div id="langDropdownMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-48 rounded-2xl bg-white border border-slate-100 shadow-xl py-2 z-50 text-xs">
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="fr"><span class="text-base">🇫🇷</span> Français</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="en"><span class="text-base">🇺🇸</span> English</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="es"><span class="text-base">🇪🇸</span> Español</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="de"><span class="text-base">🇩🇪</span> Deutsch</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="pt"><span class="text-base">🇵🇹</span> Português</a>
+            <a href="#" class="lang-option flex items-center gap-3 px-4 py-2.5 hover:bg-[#F0FDF4]/50" data-lang="it"><span class="text-base">🇮🇹</span> Italiano</a>
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobileMenuBtn" type="button" class="md:hidden p-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors" aria-label="Toggle menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobileMenu" class="hidden md:hidden mobile-nav-drawer border-t border-slate-200/80 bg-white/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-1.5 shadow-xl">
+      <a href="index.html#tools-section" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="grid" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Tous les outils</span>
+      </a>
+      <a href="compress-image.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="image-down" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Compresseur d'Image</span>
+      </a>
+      <a href="word-to-pdf.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="file-text" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Word en PDF</span>
+      </a>
+      <a href="compress.html" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-[#22C55E] font-bold text-sm transition-all">
+        <i data-lucide="minimize-2" class="w-5 h-5 text-[#22C55E]"></i>
+        <span>Compresser PDF</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <!-- Hero Header -->
+      <div class="text-center space-y-3">
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight" data-i18n="hero_title">
+          Compresser des <span class="text-[#22C55E]">Images</span> (JPG, PNG, WEBP)
+        </h1>
+        <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto" data-i18n="hero_subtitle">
+          Réduisez le poids de vos photos jusqu'à 80% sans perte de qualité avec un contrôle de compression ajustable en temps réel.
+        </p>
+      </div>
+
+      <!-- 1. Dropzone Section -->
+      <div id="dropzoneSection" class="bg-white p-8 sm:p-14 rounded-3xl border-2 border-dashed border-slate-300 shadow-xl text-center space-y-6 transition-all hover:border-[#22C55E]">
+        <input type="file" id="imageFileInput" accept=".jpg, .jpeg, .png, .webp, image/*" multiple class="hidden">
+
+        <div id="dropzone" onclick="document.getElementById('imageFileInput').click()" class="cursor-pointer space-y-5">
+          <div class="w-20 h-20 rounded-2xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="image-plus" class="w-10 h-10"></i>
+          </div>
+
+          <div class="space-y-1">
+            <h3 class="text-lg font-bold text-slate-900" data-i18n="drop_title">Glissez & déposez vos images ici</h3>
+            <p class="text-xs text-slate-400 font-medium uppercase tracking-wider" data-i18n="drop_or">ou</p>
+          </div>
+
+          <div>
+            <button type="button" class="px-8 py-4 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-lg shadow-emerald-500/25 transition-all inline-flex items-center gap-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span data-i18n="drop_btn">Sélectionner des images</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100" data-i18n="drop_info">
+          Formats acceptés : JPG, PNG, WebP. Traitement 100% local dans votre navigateur.
+        </p>
+      </div>
+
+      <!-- 2. Quality Settings & Live Gallery Controls (Editor) -->
+      <div id="editorSection" class="hidden space-y-8">
+        
+        <!-- Quality Slider Card -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900" data-i18n="slider_title">Niveau de Compression & Qualité</h3>
+              <p class="text-xs text-slate-500" data-i18n="slider_sub">Ajustez le curseur pour équilibrer la réduction de poids et la qualité visuelle.</p>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-[#F0FDF4] rounded-xl border border-[#DCFCE7] text-[#15803D] font-black text-sm">
+              <span data-i18n="quality_label">Qualité :</span>
+              <span id="qualityValText" class="text-base">70%</span>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <input type="range" id="qualityRange" min="10" max="90" step="5" value="70" class="w-full accent-[#22C55E] cursor-pointer">
+            <div class="flex justify-between text-[11px] font-bold text-slate-400">
+              <span data-i18n="min_compress">Compression Max (Qualité 10%)</span>
+              <span data-i18n="balanced">Équilibré (70%)</span>
+              <span data-i18n="max_quality">Haute Qualité (90%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Gallery Grid -->
+        <div id="imagesGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+
+        <!-- Download Action Card -->
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p id="totalSavingsSummary" class="text-sm font-extrabold text-slate-900">Total : 0 images compressées</p>
+            <p class="text-xs text-slate-400" data-i18n="download_info">Fichiers prêts pour un téléchargement immédiat.</p>
+          </div>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button id="downloadAllImagesBtn" onclick="downloadCompressedImages()" class="flex-1 sm:flex-none py-4 px-8 rounded-xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl shadow-emerald-500/25 inline-flex items-center justify-center gap-2">
+              <i data-lucide="download" class="w-5 h-5"></i>
+              <span id="downloadBtnText" data-i18n="btn_download_all">Télécharger les images</span>
+            </button>
+            <button onclick="resetImageCompressor()" class="py-4 px-5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold text-sm inline-flex items-center justify-center">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. Progress Spinner Section -->
+      <div id="progressSection" class="hidden max-w-2xl mx-auto bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
+        <div class="w-16 h-16 rounded-full bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center mx-auto animate-pulse">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
+        </div>
+        <div class="max-w-md mx-auto space-y-2">
+          <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+            <div id="progressBar" class="bg-[#22C55E] h-full w-0 transition-all duration-300"></div>
+          </div>
+          <p id="statusMsg" class="text-xs font-bold text-slate-700">Compression des images en cours...</p>
+        </div>
+      </div>
+
+      <!-- ==================== RICH SEO EXPLANATORY SECTION ==================== -->
+      <div class="pt-12 border-t border-slate-200/80 space-y-8 text-slate-700">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Comment compresser des images <span class="text-[#22C55E]">sans perte de qualité</span> ?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500">
+            Réduisez le poids de vos visuels JPG, PNG et WebP pour votre site web, vos emails ou vos réseaux sociaux.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">1</div>
+            <h3 class="text-sm font-extrabold text-slate-900">1. Sélectionnez vos Images</h3>
+            <p>Glissez-déposez une ou plusieurs photos (JPG, PNG, WebP) dans l'outil d'optimisation.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-emerald-600 flex items-center justify-center font-bold">2</div>
+            <h3 class="text-sm font-extrabold text-slate-900">2. Ajustez la Qualité</h3>
+            <p>Utilisez le curseur interactif pour trouver l'équilibre idéal entre légèreté du fichier et netteté d'image.</p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-[#F0FDF4] text-[#22C55E] flex items-center justify-center font-bold">3</div>
+            <h3 class="text-sm font-extrabold text-slate-900">3. Téléchargez Instantanément</h3>
+            <p>Obtenez vos images optimisées à l'unité ou sous forme d'archive ZIP pratique.</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 space-y-4 text-xs leading-relaxed">
+          <h2 class="text-lg font-black text-slate-900">Pourquoi utiliser le Compresseur d'Image SWIF PDF ?</h2>
+          <p>
+            Les images non optimisées sont la première cause de lenteur des sites internet. Avec **SWIF PDF**, l'ensemble du traitement est effectué **100% localement dans la mémoire de votre navigateur** grâce à la technologie HTML5 Canvas.
+          </p>
+          <p>
+            Vos photos confidentielles et documents personnels ne sont **jamais téléversés sur un serveur distant**, vous garantissant une confidentialité totale et une rapidité de traitement instantanée.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400 py-12 mt-auto border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-lg font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+      </div>
+      <p>© 2026 SWIF PDF. Tous droits réservés. Outils PDF & Image 100% locaux et gratuits.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="compress-image.js"></script>
+</body>
+</html>
