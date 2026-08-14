@@ -74,15 +74,18 @@
       </a>
 
       <!-- Central Navigation Menu -->
-      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-        <a href="index.html" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_tools">Outils PDF</a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#F0FDF4] hover:text-[#22C55E] text-slate-700 text-xs font-bold transition-all border border-slate-200 shadow-sm" data-i18n="nav_home">
+          <i data-lucide="home" class="w-4 h-4 text-[#22C55E]"></i>
+          <span>Accueil</span>
+        </a>
+        <a href="index.html#tools-section" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_tools">Outils PDF</a>
         <a href="compress.html" class="hover:text-[#22C55E] transition-colors" data-i18n="nav_compress">Compresser</a>
         <a href="convert.html" class="hover:text-[#22C55E] transition-colors">Convertir</a>
         <a href="blog.html" class="text-[#22C55E] font-extrabold flex items-center gap-1.5" data-i18n="nav_blog">
           <i data-lucide="book-open" class="w-4 h-4"></i>
           <span>Blog & Guides</span>
         </a>
-        <a href="index.html#faq-section" class="hover:text-[#22C55E] transition-colors">FAQ</a>
       </nav>
 
       <!-- Right Header Controls: Language Selector & Free Tools Button -->
@@ -334,7 +337,7 @@
 
           <div class="p-6 sm:p-8 pt-0 border-t border-slate-100 flex items-center justify-between">
             <span class="text-xs font-extrabold text-slate-400">${dict.author_tag}</span>
-            <a href="article.html?id=${art.id}" class="inline-flex items-center gap-2 text-xs font-black text-[#22C55E] group-hover:translate-x-1 transition-transform">
+            <a href="${art.articleUrl || ('article.html?id=' + art.id)}" class="inline-flex items-center gap-2 text-xs font-black text-[#22C55E] group-hover:translate-x-1 transition-transform">
               <span>${dict.read_more}</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>

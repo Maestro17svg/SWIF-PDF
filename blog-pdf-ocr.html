@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconnaissance Optique de Caractères (OCR) : Extraire le Texte de PDF Scannés | SWIF PDF</title>
+  <meta name="description" content="Transformez vos documents PDF scannés et images en textes éditables et copiables grâce au moteur OCR local Tesseract.js dans votre navigateur.">
+  <meta name="keywords" content="OCR PDF gratuit, reconnaissance de texte PDF, extraire texte PDF scanné, Tesseract.js OCR local, convertir PDF scanné Word">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://swifpdf.com/blog-pdf-ocr.html">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Reconnaissance Optique de Caractères (OCR) : Extraire le Texte de PDF Scannés",
+    "description": "Guide complet sur la technologie OCR dans le navigateur pour extraire le texte des PDF scannés.",
+    "author": { "@type": "Organization", "name": "Équipe SWIF PDF" },
+    "publisher": { "@type": "Organization", "name": "SWIF PDF", "url": "https://swifpdf.com" },
+    "datePublished": "2026-08-14",
+    "mainEntityOfPage": "https://swifpdf.com/blog-pdf-ocr.html"
+  }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#FAFAFA] text-[#1E2029] antialiased flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 glass-nav transition-all duration-200 border-b border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 bg-[#22C55E] rounded-xl flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+            <i data-lucide="file-search" class="w-6 h-6"></i>
+          </div>
+          <span class="text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+        </a>
+        <a href="index.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-[#F0FDF4] hover:text-[#22C55E] text-slate-700 text-xs font-bold transition-all border border-slate-200 shadow-sm">
+          <i data-lucide="home" class="w-4 h-4 text-[#22C55E]"></i>
+          <span>Accueil</span>
+        </a>
+      </div>
+      <a href="blog.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 text-[#22C55E] font-bold text-xs hover:bg-emerald-100 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Retour au Blog</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-grow py-12 md:py-16">
+    <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      <!-- Article Header & Meta -->
+      <div class="space-y-4 text-center sm:text-left border-b border-slate-200 pb-8">
+        <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
+          <span class="px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase tracking-wider">Conversion & OCR</span>
+          <span class="text-xs text-slate-400 font-bold flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 9 min de lecture</span>
+          <span class="text-xs text-slate-400 font-bold flex items-center gap-1"><i data-lucide="user" class="w-3.5 h-3.5"></i> Par l'Équipe SWIF PDF</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          Reconnaissance Optique de Caractères (OCR) : Extraire le Texte de PDF Scannés
+        </h1>
+        <p class="text-base sm:text-lg text-slate-600 font-medium leading-relaxed">
+          Un document scanné ou pris en photo n'est qu'une simple image : le texte est incopiable et impossible à rechercher. L'OCR résout ce problème en analysant les formes de chaque lettre pour restituer un texte éditable.
+        </p>
+      </div>
+
+      <!-- Article Body -->
+      <div class="prose prose-slate max-w-none space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
+        
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">1. Comment fonctionne la technologie OCR ?</h2>
+        <p>
+          La **Reconnaissance Optique de Caractères (Optical Character Recognition)** numérise visuellement chaque ligne de texte. Le moteur compare les zones d'ombre et de lumière avec des matrices de caractères alphabétiques pour reconstituer les mots originaux.
+        </p>
+
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">2. Moteur Tesseract.js : Reconnaissance multilingue locale</h2>
+        <p>
+          SWIF PDF intègre le moteur **Tesseract.js** directement dans WebAssembly. Vous pouvez extraire du texte en français, anglais, espagnol, allemand, arabe, portugais, italien ou polonais sans envoyer vos documents sur un serveur externe.
+        </p>
+
+        <!-- CTA Box -->
+        <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-8 rounded-3xl text-white text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div class="space-y-2">
+            <h3 class="text-xl font-black">Besoin d'extraire le texte d'un PDF scanné ?</h3>
+            <p class="text-xs text-slate-300">Lancez l'analyse OCR et téléchargez votre texte au format .TXT ou .DOCX.</p>
+          </div>
+          <a href="ocr.html" class="px-8 py-4 rounded-2xl bg-[#22C55E] hover:bg-[#16A34A] text-white font-black text-sm shadow-xl shadow-emerald-500/25 transition-all shrink-0 inline-flex items-center gap-2">
+            <i data-lucide="file-search" class="w-5 h-5"></i>
+            <span>Lancer l'OCR PDF Maintenant</span>
+          </a>
+        </div>
+
+      </div>
+
+    </article>
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+        <div class="md:col-span-5 space-y-4">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-[#22C55E] rounded-lg flex items-center justify-center text-white">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </a>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Navigation</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="blog.html" class="hover:text-white transition-colors" data-i18n="footer_nav_blog">Blog & Articles SEO</a></li>
+            <li><a href="ocr.html" class="hover:text-white transition-colors">OCR & Texte</a></li>
+          </ul>
+        </div>
+        <div class="md:col-span-4 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions Générales (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Politique de Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 pt-4">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="footer-i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -61,10 +61,11 @@
         </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-        <a href="index.html" class="inline-flex items-center gap-2 hover:text-[#22C55E] transition-colors" data-i18n="nav_home">
-          <i data-lucide="arrow-left" class="w-4 h-4"></i>
-          <span>Retour à l'accueil</span>
+      <!-- Central Navigation Menu / Home Button -->
+      <nav class="flex items-center gap-3">
+        <a href="index.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-[#F0FDF4] hover:text-[#22C55E] text-slate-700 text-xs font-bold transition-all border border-slate-200 shadow-sm" data-i18n="nav_home">
+          <i data-lucide="home" class="w-4 h-4 text-[#22C55E]"></i>
+          <span>Accueil</span>
         </a>
       </nav>
 
@@ -260,15 +261,58 @@
     </div>
   </main>
 
-  <footer class="bg-slate-900 text-slate-400 py-12 mt-auto border-t border-slate-800 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <div class="flex items-center justify-center gap-2">
-        <span class="text-lg font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800">
+        
+        <div class="md:col-span-5 space-y-4">
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-[#22C55E] rounded-lg flex items-center justify-center text-white">
+              <i data-lucide="image-down" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-black text-white notranslate" translate="no">SWIF <span class="text-[#22C55E]">PDF</span></span>
+          </a>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed" data-i18n="footer_desc">
+            La plateforme d'édition, de conversion et d'organisation PDF & Image 100% gratuite et privée. Traitement local instantané dans votre navigateur sans téléverser vos fichiers sur un serveur.
+          </p>
+        </div>
+
+        <div class="md:col-span-3 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_nav_heading">Navigation</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="index.html" class="hover:text-white transition-colors" data-i18n="footer_nav_home">Page d'accueil</a></li>
+            <li><a href="blog.html" class="hover:text-white transition-colors" data-i18n="footer_nav_blog">Blog & Articles SEO</a></li>
+            <li><a href="compress-image.html" class="hover:text-white transition-colors">Compresseur d'Image</a></li>
+            <li><a href="word-to-pdf.html" class="hover:text-white transition-colors">Word en PDF</a></li>
+            <li><a href="compress.html" class="hover:text-white transition-colors" data-i18n="footer_nav_compress">Compresser PDF</a></li>
+            <li><a href="sign.html" class="hover:text-white transition-colors" data-i18n="footer_nav_sign">Signer PDF</a></li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-4 space-y-3">
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider" data-i18n="footer_legal_heading">Informations & Légal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="terms.html" class="hover:text-white transition-colors" data-i18n="footer_legal_terms">Conditions Générales (CGU)</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-i18n="footer_legal_privacy">Politique de Confidentialité</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-i18n="footer_legal_contact">Nous Contacter</a></li>
+          </ul>
+        </div>
+
       </div>
-      <p>© 2026 SWIF PDF. Tous droits réservés. Outils PDF & Image 100% locaux et gratuits.</p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 pt-4">
+        <p data-i18n="footer_rights">&copy; 2026 SWIF PDF. Tous droits réservés.</p>
+        <div class="flex gap-4 mt-4 sm:mt-0 text-emerald-400 font-bold">
+          <span>100% Private</span> &bull; <span>WebAssembly Local Engine</span> &bull; <span>Free Forever</span>
+        </div>
+      </div>
+
     </div>
   </footer>
 
+  <script src="footer-i18n.js"></script>
   <script src="app.js"></script>
   <script src="compress-image.js"></script>
 </body>
